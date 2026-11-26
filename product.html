@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — THE JEANS FACTORY</title>
+  <meta name="description" content="Heavyweight Indian denim, cut for the street. Six signature fits, limited SS26 drops and a fit finder built for real bodies. Free shipping above ₹2,499." />
+  <meta name="theme-color" content="#161616" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23141414'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='26' fill='%23F5F5F0'%3ET%3C/text%3E%3C/svg%3E" />
+
+  <!-- Fonts: Anton (display grotesque), Syne (editorial sans), Space Mono (technical mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="pdp-page">
+
+  <!-- Texture + fixed chrome -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-fill"></span></div>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <header class="nav" id="nav">
+    <a class="wordmark" href="index.html" aria-label="The Jeans Factory home">
+      <span class="wordmark-main">THE JEANS</span>
+      <span class="wordmark-sub mono">FACTORY®</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html#fits">Fits</a>
+      <a href="index.html#craft">Craft</a>
+      <a href="index.html#drops">Drops</a>
+      <a href="index.html#fitfinder">Fit Finder</a>
+      <a href="index.html#lookbook">Lookbook</a>
+      <a href="index.html#factory">Factory</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-drop mono" href="index.html#drops"><i></i>SS26 DROP LIVE</a>
+      <button class="cart-btn mono" data-open-cart aria-label="Open cart">
+        CART <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav aria-label="Mobile">
+      <a href="index.html#fits"><span class="mono">01</span>Fits</a>
+      <a href="index.html#craft"><span class="mono">02</span>Craft</a>
+      <a href="index.html#drops"><span class="mono">03</span>Drops</a>
+      <a href="index.html#fitfinder"><span class="mono">04</span>Fit Finder</a>
+      <a href="index.html#lookbook"><span class="mono">05</span>Lookbook</a>
+      <a href="index.html#factory"><span class="mono">06</span>Factory</a>
+    </nav>
+    <div class="mobile-menu-foot mono">
+      <span>EST. 2019 — INDIA</span>
+      <span>14OZ RING-SPUN</span>
+    </div>
+  </div>
+
+  <main id="top">
+
+    <!-- Breadcrumb -->
+    <nav class="pdp-breadcrumb" aria-label="Breadcrumb">
+      <ol class="pdp-breadcrumb-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#fits">Fits</a></li>
+        <li><span id="pdp-breadcrumb-product" aria-current="page"></span></li>
+      </ol>
+    </nav>
+
+    <!-- Product Stage -->
+    <section class="pdp-stage" aria-labelledby="pdp-title">
+      <div class="pdp-gallery" role="region" aria-label="Product images">
+        <!-- Thumbnail strip -->
+        <div class="pdp-thumbs" id="pdp-thumbs" aria-label="Product thumbnails"></div>
+
+        <!-- Main image with zoom -->
+        <div class="pdp-main-image" id="pdp-main-image">
+          <div class="pdp-zoom-wrap" id="pdp-zoom-wrap">
+            <img id="pdp-main-img" src="" alt="" />
+          </div>
+          <div class="pdp-view-switcher" role="group" aria-label="Product view">
+            <button class="is-active" data-view="model" aria-pressed="true">MODEL</button>
+            <button data-view="flat" aria-pressed="false">FLAT-LAY</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Summary (Right Column) -->
+      <aside class="pdp-summary" aria-label="Product details and purchase">
+        <span class="mono pdp-brand-tag" id="pdp-brand-tag">THE JEANS FACTORY / SS26</span>
+        <h1 id="pdp-title"></h1>
+
+        <div class="pdp-rating-summary" id="pdp-rating-summary">
+          <span class="pdp-stars" aria-label="4.8 out of 5 stars">★★★★★</span>
+          <span class="pdp-rating-value mono" id="pdp-rating-value">4.8</span>
+          <span class="pdp-review-count mono" id="pdp-review-count">(2,418)</span>
+        </div>
+
+        <div class="pdp-price-row" id="pdp-price-row">
+          <span class="pdp-price" id="pdp-price"></span>
+          <span class="pdp-mrp" id="pdp-mrp"></span>
+          <span class="pdp-discount-badge" id="pdp-discount-badge"></span>
+        </div>
+
+        <!-- Offers / Coupon Box -->
+        <div class="pdp-offers" id="pdp-offers"></div>
+
+        <!-- Wash/Color Swatches -->
+        <div class="pdp-swatches" id="pdp-swatches"></div>
+
+        <!-- Size & Length Selector -->
+        <div class="pdp-size-section">
+          <div class="pdp-size-row">
+            <span class="mono pdp-size-label">WAIST</span>
+            <div class="pdp-size-pills" id="pdp-size-pills" role="group" aria-label="Waist sizes"></div>
+          </div>
+          <div class="pdp-size-row">
+            <span class="mono pdp-size-label">LENGTH</span>
+            <div class="pdp-length-pills" id="pdp-length-pills" role="group" aria-label="Length options"></div>
+          </div>
+          <button class="pdp-size-guide" type="button" data-open-size-guide aria-label="Open size guide">SIZE GUIDE</button>
+        </div>
+
+        <!-- Pincode Delivery Checker -->
+        <div class="pdp-pincode">
+          <label for="pdp-pincode-input" class="mono">CHECK DELIVERY</label>
+          <div class="pdp-pincode-row">
+            <input type="text" id="pdp-pincode-input" placeholder="Enter Pincode" maxlength="6" inputmode="numeric" aria-label="Enter 6-digit pincode" />
+            <button class="btn-solid" id="pdp-pincode-check" type="button">CHECK</button>
+          </div>
+          <p class="pdp-pincode-msg mono" id="pdp-pincode-msg" aria-live="polite"></p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pdp-actions">
+          <button class="btn-solid pdp-buy-now" id="pdp-buy-now" type="button">
+            <span>BUY NOW</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+          </button>
+          <button class="btn-outline pdp-add-bag" id="pdp-add-bag" type="button">
+            <span>ADD TO BAG</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+          </button>
+        </div>
+
+        <!-- Trust Badges -->
+        <ul class="pdp-trust" aria-label="Trust badges">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>7 Days Easy Exchange</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>Cash on Delivery</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>Free Shipping Above ₹2,499</span></li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- Collapsible Accordions -->
+    <section class="pdp-accordions" aria-label="Product details">
+      <div class="pdp-accordion" data-accordion="description">
+        <button class="pdp-accordion-trigger" aria-expanded="false" aria-controls="pdp-accordion-description">
+          <span class="mono">DESCRIPTION</span>
+          <svg class="pdp-accordion-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <div class="pdp-accordion-content" id="pdp-accordion-description" hidden>
+          <p id="pdp-description"></p>
+        </div>
+      </div>
+      <div class="pdp-accordion" data-accordion="fit-sizing">
+        <button class="pdp-accordion-trigger" aria-expanded="false" aria-controls="pdp-accordion-fit-sizing">
+          <span class="mono">FIT & SIZING</span>
+          <svg class="pdp-accordion-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <div class="pdp-accordion-content" id="pdp-accordion-fit-sizing" hidden>
+          <div class="pdp-fit-sizing">
+            <div class="pdp-stretch-meter-block">
+              <div class="pdp-block-head">
+                <span class="mono">FABRIC STRETCH METER</span>
+                <span class="mono pdp-stretch-readout" id="pdp-stretch-readout">0% ELASTANE</span>
+              </div>
+              <div class="stretch-meter">
+                <div class="stretch-track">
+                  <span class="stretch-actual" id="pdp-stretch-actual"></span>
+                  <span class="stretch-fill" id="pdp-stretch-fill"></span>
+                  <span class="stretch-knob" id="pdp-stretch-knob"></span>
+                </div>
+                <input type="range" id="pdp-stretch-range" min="0" max="15" step="1" value="0" aria-label="Explore fabric stretch percentage" />
+                <div class="stretch-labels mono"><span>RIGID 0%</span><span>COMFORT STRETCH</span></div>
+              </div>
+              <div class="stretch-copy">
+                <strong class="mono" id="pdp-stretch-label">RIGID</strong>
+                <p id="pdp-stretch-copy"></p>
+              </div>
+            </div>
+            <div class="pdp-measure-block">
+              <div class="pdp-block-head">
+                <span class="mono">MEASUREMENT CHART (INCHES)</span>
+              </div>
+              <div class="measure-scroll"><table class="measure-table" id="pdp-measure-table"></table></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pdp-accordion" data-accordion="composition-care">
+        <button class="pdp-accordion-trigger" aria-expanded="false" aria-controls="pdp-accordion-composition-care">
+          <span class="mono">COMPOSITION & CARE</span>
+          <svg class="pdp-accordion-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <div class="pdp-accordion-content" id="pdp-accordion-composition-care" hidden>
+          <p class="mono" id="pdp-composition"></p>
+          <ul class="care-list" id="pdp-care-list"></ul>
+        </div>
+      </div>
+      <div class="pdp-accordion" data-accordion="additional-details">
+        <button class="pdp-accordion-trigger" aria-expanded="false" aria-controls="pdp-accordion-additional-details">
+          <span class="mono">ADDITIONAL DETAILS</span>
+          <svg class="pdp-accordion-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <div class="pdp-accordion-content" id="pdp-accordion-additional-details" hidden>
+          <dl class="pdp-details-list" id="pdp-details-list"></dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="pdp-reviews" aria-labelledby="pdp-reviews-title">
+      <header class="pdp-reviews-head">
+        <h2 id="pdp-reviews-title">CUSTOMER REVIEWS & FIT RATING</h2>
+        <div class="pdp-overall-rating">
+          <span class="pdp-big-rating" id="pdp-big-rating">4.8</span>
+          <span class="mono">/ 5.0</span>
+          <div class="pdp-rating-bar">
+            <div class="pdp-rating-bar-fill" id="pdp-rating-bar-fill" style="width: 96%"></div>
+          </div>
+          <span class="mono pdp-rating-count" id="pdp-total-reviews">2,418 reviews</span>
+        </div>
+      </header>
+
+      <!-- Write a Review Form -->
+      <form class="pdp-review-form" id="pdp-review-form" aria-label="Write a review">
+        <div class="pdp-review-form-head">
+          <span class="mono">WRITE A REVIEW</span>
+          <span class="mono pdp-form-note">Your review helps others find their perfect fit.</span>
+        </div>
+        <div class="pdp-review-form-grid">
+          <div class="pdp-form-group">
+            <label for="pdp-review-name" class="mono">NAME</label>
+            <input type="text" id="pdp-review-name" name="name" required placeholder="Your name" />
+          </div>
+          <div class="pdp-form-group">
+            <label for="pdp-review-height" class="mono">HEIGHT</label>
+            <input type="text" id="pdp-review-height" name="height" placeholder="e.g., 5'10\" or 178 cm" />
+          </div>
+          <div class="pdp-form-group">
+            <label for="pdp-review-size" class="mono">SIZE PURCHASED</label>
+            <input type="text" id="pdp-review-size" name="size" placeholder="e.g., W32 / L32" />
+          </div>
+          <div class="pdp-form-group">
+            <label class="mono">RATING</label>
+            <fieldset class="pdp-star-rating" aria-label="Rating">
+              <legend class="sr-only">Rating</legend>
+              <input type="radio" id="star5" name="rating" value="5" required><label for="star5" aria-label="5 stars">★</label>
+              <input type="radio" id="star4" name="rating" value="4"><label for="star4" aria-label="4 stars">★</label>
+              <input type="radio" id="star3" name="rating" value="3"><label for="star3" aria-label="3 stars">★</label>
+              <input type="radio" id="star2" name="rating" value="2"><label for="star2" aria-label="2 stars">★</label>
+              <input type="radio" id="star1" name="rating" value="1"><label for="star1" aria-label="1 star">★</label>
+            </fieldset>
+          </div>
+          <div class="pdp-form-group pdp-full-width">
+            <label for="pdp-review-title" class="mono">REVIEW TITLE</label>
+            <input type="text" id="pdp-review-title" name="title" required placeholder="Summarize your experience" />
+          </div>
+          <div class="pdp-form-group pdp-full-width">
+            <label for="pdp-review-body" class="mono">YOUR REVIEW</label>
+            <textarea id="pdp-review-body" name="body" rows="4" required placeholder="Tell us about the fit, quality, and how they wear..."></textarea>
+          </div>
+        </div>
+        <button class="btn-solid" type="submit"><span>SUBMIT REVIEW</span></button>
+      </form>
+
+      <!-- Fit Scale -->
+      <div class="pdp-fit-scale" id="pdp-fit-scale">
+        <span class="mono pdp-fit-scale-label">FIT SCALE</span>
+        <div class="pdp-fit-scale-bar">
+          <div class="pdp-fit-scale-track">
+            <div class="pdp-fit-scale-segment pdp-fit-small" id="pdp-fit-small"></div>
+            <div class="pdp-fit-scale-segment pdp-fit-true" id="pdp-fit-true"></div>
+            <div class="pdp-fit-scale-segment pdp-fit-large" id="pdp-fit-large"></div>
+          </div>
+          <div class="pdp-fit-scale-marker" id="pdp-fit-scale-marker"></div>
+        </div>
+        <div class="pdp-fit-scale-legend mono">
+          <span>RUNS SMALL</span>
+          <span>TRUE TO SIZE</span>
+          <span>RUNS LARGE</span>
+        </div>
+      </div>
+
+      <!-- Review Cards -->
+      <div class="pdp-reviews-list" id="pdp-reviews-list" role="list" aria-label="Customer reviews"></div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="pdp-related" aria-labelledby="pdp-related-title">
+      <header class="pdp-section-head">
+        <h2 id="pdp-related-title">YOU MAY ALSO LIKE</h2>
+      </header>
+      <div class="pdp-related-grid" id="pdp-related-grid" role="list"></div>
+    </section>
+
+    <!-- Recently Viewed -->
+    <section class="pdp-recent" aria-labelledby="pdp-recent-title" id="pdp-recent-section" hidden>
+      <header class="pdp-section-head">
+        <h2 id="pdp-recent-title">RECENTLY VIEWED</h2>
+      </header>
+      <div class="pdp-recent-track" id="pdp-recent-track" role="list"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-marquee" aria-hidden="true">
+      <div class="footer-marquee-track">
+        <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+        <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+      </div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="mono">RAW SELVEDGE<br />ENGINEERED IN INDIA</p>
+        <h3>BUILT<br />TO OUTLIVE<br />THE TREND.</h3>
+      </div>
+
+      <div class="footer-col">
+        <span class="mono">SHOP</span>
+        <a href="index.html#fits">Signature Fits</a>
+        <a href="index.html#drops">SS26 Drop</a>
+        <a href="index.html#fitfinder">Fit Finder</a>
+        <a href="index.html#lookbook">Lookbook</a>
+      </div>
+
+      <div class="footer-col">
+        <span class="mono">STUDIO</span>
+        <a href="index.html#craft">Fabric & Craft</a>
+        <a href="index.html#lookbook">Lookbook</a>
+        <a href="#" data-toast="Stockist list drops soon.">Stockists</a>
+        <a href="#" data-toast="Care guide: cold wash, inside out, hang dry.">Care Guide</a>
+      </div>
+
+      <form class="footer-news" id="newsletter-form">
+        <label for="newsletter-email" class="mono">JOIN THE MILL LIST</label>
+        <p class="mono">Drop alerts, restocks, zero spam.</p>
+        <div class="news-row">
+          <input type="email" id="newsletter-email" placeholder="you@email.com" required autocomplete="email" />
+          <button type="submit" aria-label="Subscribe">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="footer-bottom mono">
+      <span>© 2026 THE JEANS FACTORY</span>
+      <span>MADE WITH HEAVY DENIM & LIGHTER DAYS</span>
+      <span>INR ₹ / INDIA</span>
+    </div>
+  </footer>
+
+  <!-- Size Guide Modal -->
+  <div class="modal" id="pdp-size-guide-modal" role="dialog" aria-modal="true" aria-labelledby="sg-title" aria-hidden="true">
+    <div class="modal-backdrop" data-close-size-guide></div>
+    <div class="modal-card" data-lenis-prevent>
+      <button class="icon-btn modal-close" data-close-size-guide aria-label="Close size guide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <span class="eyebrow mono">SIZE GUIDE</span>
+      <h2 id="sg-title">FIND YOUR FIT</h2>
+      <p class="mono" style="margin-top: 0.5rem; color: rgba(245,245,240,.65);">Measurements in inches. Measure a pair that fits you well.</p>
+      <div class="measure-scroll"><table class="measure-table" id="sg-measure-table"></table></div>
+      <p class="mono" style="margin-top: 1rem; font-size: 0.54rem; color: rgba(245,245,240,.5);">For raw denim, size up one waist if between sizes. Length 32 fits most up to 5'10".</p>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="drawer-overlay" id="drawer-overlay" data-close-cart></div>
+  <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
+    <header class="cart-head">
+      <div>
+        <span class="eyebrow mono">YOUR BAG</span>
+        <h2 id="cart-title">THE HAUL <span class="mono" id="cart-head-count">(0)</span></h2>
+      </div>
+      <button class="icon-btn" data-close-cart aria-label="Close cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </header>
+
+    <div class="ship-meter">
+      <div class="ship-meter-copy mono">
+        <span id="ship-copy">ADD ₹2,499 FOR FREE SHIPPING</span>
+        <span id="ship-percent">0%</span>
+      </div>
+      <div class="ship-track"><span id="ship-fill"></span></div>
+    </div>
+
+    <div class="cart-body" data-lenis-prevent>
+      <div class="cart-items" id="cart-items"><!-- rendered by product.js --></div>
+      <div id="cross-sell"><!-- rendered by product.js --></div>
+    </div>
+
+    <footer class="cart-foot">
+      <div class="cart-subtotal mono"><span>SUBTOTAL</span><strong id="cart-subtotal">₹0</strong></div>
+      <p class="mono cart-note">Taxes included. Shipping calculated at checkout.</p>
+      <button class="btn-solid full" id="checkout-btn">
+        <span>CHECKOUT</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      </button>
+      <p class="mono cart-trust">UPI / CARD / COD — 30-DAY EXCHANGE</p>
+    </footer>
+  </aside>
+
+  <!-- Toast -->
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Libraries via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <script src="product.js" defer></script>
+</body>
+</html>

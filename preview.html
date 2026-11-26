@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE JEANS FACTORY — Raw Selvedge Denim, Engineered in India</title>
+  <meta name="description" content="Heavyweight Indian denim, cut for the street. Six signature fits, limited SS26 drops and a fit finder built for real bodies. Free shipping above ₹2,499." />
+  <meta name="theme-color" content="#F5F5F0" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23141414'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='26' fill='%23F5F5F0'%3ET%3C/text%3E%3C/svg%3E" />
+
+  <!-- Fonts: Anton (display grotesque), Syne (editorial sans), Space Mono (technical mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <style>#preloader{display:none!important} #dbg{position:fixed;z-index:99999;top:80px;left:12px;background:#000;color:#0f0;font:12px monospace;padding:6px 8px;pointer-events:none}</style>
+  <script>
+  (function(){
+    var dbg = document.createElement('div'); dbg.id='dbg'; dbg.textContent='boot'; document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(dbg); });
+    var target = null;
+    function compute(){
+      var params = new URLSearchParams(location.search);
+      var q = params.get('section'); if(!q) return;
+      var parts = q.split(':'); var key = parts[0]; var p = parts[1] ? parseFloat(parts[1]) : 0;
+      var sel = {fits:'.fits',craft:'.craft',drops:'.drops',fitfinder:'.finder',lookbook:'.lookbook',hero:'.hero'}[key];
+      var el = document.querySelector(sel); if(!el) return;
+      var t = el.getBoundingClientRect().top + window.pageYOffset;
+      var info = 'el=' + Math.round(t);
+      if(window.ScrollTrigger){
+        var st = ScrollTrigger.getAll().filter(function(s){return s.trigger===el;})[0];
+        if(st){ t = st.start + p*(st.end-st.start); info += ' st=' + Math.round(st.start) + '..' + Math.round(st.end); }
+      }
+      target = t; dbg.dataset.info = info;
+    }
+    function go(){
+      if(target==null) compute();
+      if(target==null) return;
+      if(window.__lenis) window.__lenis.scrollTo(target, {immediate:true, force:true});
+      window.scrollTo(0, target);
+      requestAnimationFrame(function(){ dbg.textContent = (dbg.dataset.info||'') + ' y=' + Math.round(window.scrollY) + ' t=' + Math.round(target); });
+    }
+    window.addEventListener('load', function(){ compute(); go(); setInterval(go, 120); });
+    window.addEventListener('DOMContentLoaded', function(){ compute(); setTimeout(go, 60); });
+  })();
+  </script>
+</head>
+<body>
+
+  <!-- ============================================================
+       PRELOADER (CSS auto-dismiss fallback included)
+  ============================================================ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <span class="preloader-word mono">THE JEANS FACTORY</span>
+      <span class="preloader-count mono" id="preloader-count">00</span>
+    </div>
+    <div class="preloader-bar"><span id="preloader-fill"></span></div>
+    <p class="preloader-note mono">RAW SELVEDGE / SS26</p>
+  </div>
+
+  <!-- Texture + fixed chrome -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"><span>VIEW</span></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-fill"></span></div>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <header class="nav" id="nav">
+    <a class="wordmark" href="#top" aria-label="The Jeans Factory home">
+      <span class="wordmark-main">THE JEANS</span>
+      <span class="wordmark-sub mono">FACTORY®</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#fits">Fits</a>
+      <a href="#craft">Craft</a>
+      <a href="#drops">Drops</a>
+      <a href="#fitfinder">Fit Finder</a>
+      <a href="#lookbook">Lookbook</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-drop mono" href="#drops"><i></i>SS26 DROP LIVE</a>
+      <button class="cart-btn mono" data-open-cart aria-label="Open cart">
+        CART <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav aria-label="Mobile">
+      <a href="#fits"><span class="mono">01</span>Fits</a>
+      <a href="#craft"><span class="mono">02</span>Craft</a>
+      <a href="#drops"><span class="mono">03</span>Drops</a>
+      <a href="#fitfinder"><span class="mono">04</span>Fit Finder</a>
+      <a href="#lookbook"><span class="mono">05</span>Lookbook</a>
+    </nav>
+    <div class="mobile-menu-foot mono">
+      <span>EST. 2019 — INDIA</span>
+      <span>14OZ RING-SPUN</span>
+    </div>
+  </div>
+
+  <!-- Chapter rail -->
+  <aside class="chapter-rail" aria-label="Chapters">
+    <a href="#top" data-rail="top"><span class="mono">01</span><i></i>Hero</a>
+    <a href="#fits" data-rail="fits"><span class="mono">02</span><i></i>Fit Morph</a>
+    <a href="#craft" data-rail="craft"><span class="mono">03</span><i></i>Craft</a>
+    <a href="#drops" data-rail="drops"><span class="mono">04</span><i></i>Drops</a>
+    <a href="#fitfinder" data-rail="fitfinder"><span class="mono">05</span><i></i>Fit Finder</a>
+    <a href="#lookbook" data-rail="lookbook"><span class="mono">06</span><i></i>Lookbook</a>
+  </aside>
+
+  <main id="top">
+
+    <!-- ============================================================
+         CHAPTER 01 — KINETIC HERO
+    ============================================================ -->
+    <section class="hero" id="hero">
+      <div class="hero-media">
+        <div class="hero-img-wrap img-ph">
+          <img
+            src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=2400&q=85"
+            alt="Close-up of raw indigo selvedge denim fabric"
+            fetchpriority="high" />
+        </div>
+        <div class="hero-veil" id="hero-veil"></div>
+        <div class="hero-shade" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero-type" aria-label="The Jeans Factory">
+        <div class="hero-line l1"><span>THE</span></div>
+        <div class="hero-line l2"><span>JEANS</span></div>
+        <div class="hero-line l3"><span>FACTORY</span></div>
+      </div>
+
+      <div class="hero-meta mono">
+        <span>EST. 2019 / INDIA</span>
+        <span class="hero-meta-mid">14OZ RING-SPUN SELVEDGE</span>
+        <span>SS26 — VOL. 04</span>
+      </div>
+
+      <a class="hero-cta magnetic" href="#drops" data-cursor="shop">
+        <span>SHOP THE DROP</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      </a>
+
+      <div class="hero-scroll mono"><span>SCROLL TO UNRAVEL</span><i></i>01 / 06</div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 02 — THE FIT MORPH STAGE (pinned)
+    ============================================================ -->
+    <section class="fits" id="fits">
+      <div class="fits-pin">
+        <div class="section-tag mono"><span>CHAPTER 02</span> THE FIT MORPH</div>
+
+        <div class="fits-grid">
+          <div class="fits-visual">
+            <span class="fit-ghost" aria-hidden="true">FIT</span>
+            <svg class="fit-svg" viewBox="0 0 320 560" role="img" aria-label="Morphing denim silhouette">
+              <defs>
+                <linearGradient id="denimGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#33507f" />
+                  <stop offset=".5" stop-color="#1c2e4f" />
+                  <stop offset="1" stop-color="#0b1526" />
+                </linearGradient>
+                <pattern id="denimWeave" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(255,255,255,.10)" stroke-width="1" />
+                </pattern>
+                <filter id="fitShadow" x="-30%" y="-20%" width="160%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#141414" flood-opacity=".18" />
+                </filter>
+              </defs>
+              <g id="fit-shape" filter="url(#fitShadow)">
+                <path id="fit-body" fill="url(#denimGrad)" stroke="#0b1320" stroke-width="2" />
+                <path id="fit-weave" fill="url(#denimWeave)" opacity=".55" />
+                <path id="fit-seams" fill="none" stroke="rgba(245,245,240,.28)" stroke-width="1.4" stroke-dasharray="3 4" />
+                <path id="fit-pocket" fill="none" stroke="rgba(245,245,240,.35)" stroke-width="1.6" />
+                <rect id="fit-waistband" fill="#17253f" stroke="#0b1320" stroke-width="1.5" rx="3" />
+                <circle id="fit-rivet-l" r="3.4" fill="#EA580C" />
+                <circle id="fit-rivet-r" r="3.4" fill="#EA580C" />
+                <path id="fit-cuff" fill="none" stroke="#EA580C" stroke-width="2" stroke-dasharray="4 4" opacity=".9" />
+              </g>
+            </svg>
+            <div class="fit-index mono"><span id="fit-current">01</span><span class="fit-index-div">/</span><span>06</span></div>
+          </div>
+
+          <div class="fits-info">
+            <div class="eyebrow mono">SILHOUETTE STUDY / SIX CUTS</div>
+            <h2 class="fit-name" id="fit-name">BAGGY</h2>
+            <p class="fit-desc" id="fit-desc">Dropped crotch, generous thigh and a stacked hem. Cut from 14oz rigid denim that breaks in like a favourite record.</p>
+
+            <dl class="specs">
+              <div><dt class="mono">LEG OPENING</dt><dd id="spec-leg">19.5"</dd></div>
+              <div><dt class="mono">RISE</dt><dd id="spec-rise">11.5"</dd></div>
+              <div><dt class="mono">FABRIC</dt><dd id="spec-gsm">420 GSM</dd></div>
+              <div><dt class="mono">WASH CODE</dt><dd id="spec-wash">RAW INDIGO</dd></div>
+            </dl>
+
+            <button class="btn-outline magnetic" id="explore-fit">
+              <span>EXPLORE FIT</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M9 6h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+
+            <div class="fit-dots" id="fit-dots" role="tablist" aria-label="Silhouettes">
+              <button class="fit-dot is-active" data-fit-index="0" aria-label="Baggy" role="tab"></button>
+              <button class="fit-dot" data-fit-index="1" aria-label="Straight" role="tab"></button>
+              <button class="fit-dot" data-fit-index="2" aria-label="Wide-Leg" role="tab"></button>
+              <button class="fit-dot" data-fit-index="3" aria-label="Carpenter" role="tab"></button>
+              <button class="fit-dot" data-fit-index="4" aria-label="Bootcut" role="tab"></button>
+              <button class="fit-dot" data-fit-index="5" aria-label="Slim" role="tab"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 03 — FABRIC & CRAFT X-RAY (scrub zoom)
+    ============================================================ -->
+    <section class="craft" id="craft">
+      <div class="craft-pin">
+        <div class="craft-head">
+          <div class="section-tag mono light"><span>CHAPTER 03</span> FABRIC &amp; CRAFT X-RAY</div>
+          <h2 class="craft-title">INSIDE<br />THE <em>WEAVE</em></h2>
+          <p class="craft-intro">Four macro studies of a pair of jeans that refuses to fall apart. Scroll to zoom through the construction.</p>
+        </div>
+
+        <div class="craft-grid">
+          <article class="craft-card">
+            <div class="craft-img img-ph"><img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=80" alt="Macro denim weave texture" loading="lazy" /></div>
+            <div class="craft-overlay"></div>
+            <div class="craft-copy">
+              <span class="mono craft-num">01 / WEAVE</span>
+              <h3>14OZ RING-SPUN</h3>
+              <p class="mono">3x1 twill / unsanforized / shuttle loom</p>
+            </div>
+          </article>
+
+          <article class="craft-card">
+            <div class="craft-img img-ph"><img src="https://images.unsplash.com/photo-1555689502-c4b22d76c56f?auto=format&fit=crop&w=1200&q=80" alt="Denim stitching detail" loading="lazy" /></div>
+            <div class="craft-overlay"></div>
+            <div class="craft-copy">
+              <span class="mono craft-num">02 / STRESS</span>
+              <h3>BAR-TACK STITCH</h3>
+              <p class="mono">42 stitches / high-tension points / never rips</p>
+            </div>
+          </article>
+
+          <article class="craft-card">
+            <div class="craft-img img-ph"><img src="https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&w=1200&q=80" alt="Denim rivet hardware detail" loading="lazy" /></div>
+            <div class="craft-overlay"></div>
+            <div class="craft-copy">
+              <span class="mono craft-num">03 / HARDWARE</span>
+              <h3>ENGRAVED RIVETS</h3>
+              <p class="mono">Copper / custom die / safety-orange enamel</p>
+            </div>
+          </article>
+
+          <article class="craft-card">
+            <div class="craft-img img-ph"><img src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1200&q=80" alt="Washed denim finish" loading="lazy" /></div>
+            <div class="craft-overlay"></div>
+            <div class="craft-copy">
+              <span class="mono craft-num">04 / WASH</span>
+              <h3>ECO-OZONE TAG</h3>
+              <p class="mono">Zero bleach / 78% less water / ozone cured</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="craft-foot mono">
+          <span>LOT TJF-SS26</span>
+          <span>MILLED IN INDIA — WORN EVERYWHERE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 04 — HORIZONTAL DROP RUNWAY (pinned horizontal)
+    ============================================================ -->
+    <section class="drops" id="drops">
+      <div class="drops-pin">
+        <div class="runway-head">
+          <div class="section-tag mono"><span>CHAPTER 04</span> LIMITED DROP RUNWAY</div>
+          <div class="runway-head-right">
+            <h2 class="runway-title">THE SS26 RUNWAY</h2>
+            <span class="runway-hint mono">SCROLL <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></span>
+          </div>
+          <div class="runway-filter mono" id="runway-filter" hidden>
+            FILTER: <strong id="runway-filter-name"></strong>
+            <button id="clear-filter" aria-label="Clear fit filter">CLEAR ✕</button>
+          </div>
+        </div>
+
+        <div class="runway-viewport">
+          <div class="runway-track" id="runway-track"><!-- rendered by app.js --></div>
+        </div>
+
+        <div class="runway-foot">
+          <div class="runway-progress"><span id="runway-progress-fill"></span></div>
+          <span class="mono" id="runway-index">01 / 08</span>
+          <span class="mono runway-foot-tag">HOVER FOR SIZES — TAP TO QUICK ADD</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 05 — INTERACTIVE FIT FINDER
+    ============================================================ -->
+    <section class="finder" id="fitfinder">
+      <div class="finder-bg" aria-hidden="true"></div>
+      <div class="finder-split">
+        <div class="finder-left">
+          <div class="section-tag mono"><span>CHAPTER 05</span> FIT FINDER</div>
+          <h2 class="finder-title">YOUR<br />PERFECT<br /><span>PAIR.</span></h2>
+          <p class="finder-intro">Two sliders. Zero guesswork. Our pattern room calibrated this against 12,000 Indian body scans.</p>
+
+          <div class="finder-controls">
+            <div class="control-head">
+              <span class="mono">HEIGHT</span>
+              <div class="unit-toggle mono" role="group" aria-label="Height units">
+                <button class="is-active" data-unit="cm">CM</button>
+                <button data-unit="ft">FT</button>
+              </div>
+            </div>
+            <div class="control-value"><span id="height-value">175</span><small id="height-unit">cm</small><em id="height-ft">5'9"</em></div>
+            <input type="range" id="height-range" min="150" max="200" value="175" step="1" aria-label="Height" />
+            <div class="range-scale mono"><span>150</span><span>200</span></div>
+
+            <div class="control-head">
+              <span class="mono">WAIST</span>
+              <span class="mono control-hint">INCHES</span>
+            </div>
+            <div class="control-value"><span id="waist-value">32</span><small>in</small><em id="waist-cm">81 cm</em></div>
+            <input type="range" id="waist-range" min="26" max="44" value="32" step="1" aria-label="Waist in inches" />
+            <div class="range-scale mono"><span>26</span><span>44</span></div>
+          </div>
+
+          <div class="finder-result">
+            <div class="result-block">
+              <span class="mono">RECOMMENDED SIZE</span>
+              <strong id="result-size">W32 / L32</strong>
+            </div>
+            <div class="result-block">
+              <span class="mono">BEST SILHOUETTE</span>
+              <strong id="result-fit">WIDE-LEG</strong>
+            </div>
+            <button class="btn-solid magnetic" id="shop-size-btn">
+              <span>SHOP RECOMMENDED SIZE</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="finder-right">
+          <div class="finder-visual">
+            <span class="finder-ghost" aria-hidden="true">FIT</span>
+            <svg class="finder-svg" viewBox="0 0 320 560" role="img" aria-label="Live denim proportion preview">
+              <defs>
+                <linearGradient id="finderGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#33507f" />
+                  <stop offset=".6" stop-color="#1c2e4f" />
+                  <stop offset="1" stop-color="#0b1526" />
+                </linearGradient>
+                <pattern id="finderWeave" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,.09)" stroke-width="1" />
+                </pattern>
+              </defs>
+              <g>
+                <path id="finder-body" fill="url(#finderGrad)" stroke="#0b1320" stroke-width="2" />
+                <path id="finder-weave" fill="url(#finderWeave)" opacity=".5" />
+                <path id="finder-seams" fill="none" stroke="rgba(245,245,240,.28)" stroke-width="1.4" stroke-dasharray="3 4" />
+                <rect id="finder-waistband" fill="#17253f" stroke="#0b1320" stroke-width="1.5" rx="3" />
+                <path id="finder-cuff" fill="none" stroke="#EA580C" stroke-width="2" stroke-dasharray="4 4" />
+                <line id="finder-height-line" x1="300" y1="40" x2="300" y2="500" stroke="#1D4ED8" stroke-width="1.4" stroke-dasharray="5 5" />
+                <line id="finder-waist-line" x1="20" y1="86" x2="300" y2="86" stroke="#EA580C" stroke-width="1.4" stroke-dasharray="5 5" />
+              </g>
+            </svg>
+
+            <div class="finder-callout finder-callout-height mono" id="callout-height">HEIGHT 175 CM</div>
+            <div class="finder-callout finder-callout-waist mono" id="callout-waist">WAIST W32</div>
+            <div class="finder-note mono">LIVE PROPORTION PREVIEW — NOT TO SCALE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 06 — STREET LOOKBOOK WALL (staggered velocity)
+    ============================================================ -->
+    <section class="lookbook" id="lookbook">
+      <div class="lookbook-head">
+        <div class="section-tag mono"><span>CHAPTER 06</span> STREET LOOKBOOK</div>
+        <h2 class="lookbook-title">WORN <em>IN</em><br />THE WILD</h2>
+        <p class="lookbook-intro">Shot on 35mm across Bandra, Majnu ka Tilla and Indiranagar. Tap a tag to shop the exact fit.</p>
+      </div>
+      <div class="lookbook-wall" id="lookbook-wall"><!-- rendered by app.js --></div>
+      <div class="lookbook-foot mono">
+        <span>9 LOOKS / SS26</span>
+        <span>#WORNINTHEWILD</span>
+        <span>SHOT ON FILM — NOT FILTERED</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+    <footer class="footer">
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="footer-marquee-track">
+          <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+          <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="mono">RAW SELVEDGE<br />ENGINEERED IN INDIA</p>
+          <h3>BUILT<br />TO OUTLIVE<br />THE TREND.</h3>
+        </div>
+
+        <div class="footer-col">
+          <span class="mono">SHOP</span>
+          <a href="#fits">Signature Fits</a>
+          <a href="#drops">SS26 Drop</a>
+          <a href="#fitfinder">Fit Finder</a>
+          <a href="#lookbook">Lookbook</a>
+        </div>
+
+        <div class="footer-col">
+          <span class="mono">STUDIO</span>
+          <a href="#craft">Fabric &amp; Craft</a>
+          <a href="#lookbook">Lookbook</a>
+          <a href="#" data-toast="Stockist list drops soon.">Stockists</a>
+          <a href="#" data-toast="Care guide: cold wash, inside out, hang dry.">Care Guide</a>
+        </div>
+
+        <form class="footer-news" id="newsletter-form">
+          <label for="newsletter-email" class="mono">JOIN THE MILL LIST</label>
+          <p class="mono">Drop alerts, restocks, zero spam.</p>
+          <div class="news-row">
+            <input type="email" id="newsletter-email" placeholder="you@email.com" required autocomplete="email" />
+            <button type="submit" aria-label="Subscribe">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="footer-bottom mono">
+        <span>© 2026 THE JEANS FACTORY</span>
+        <span>MADE WITH HEAVY DENIM &amp; LIGHTER DAYS</span>
+        <span>INR ₹ / INDIA</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ============================================================
+       CART DRAWER
+  ============================================================ -->
+  <div class="drawer-overlay" id="drawer-overlay" data-close-cart></div>
+  <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
+    <header class="cart-head">
+      <div>
+        <span class="eyebrow mono">YOUR BAG</span>
+        <h2 id="cart-title">THE HAUL <span class="mono" id="cart-head-count">(0)</span></h2>
+      </div>
+      <button class="icon-btn" data-close-cart aria-label="Close cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </header>
+
+    <div class="ship-meter">
+      <div class="ship-meter-copy mono">
+        <span id="ship-copy">ADD ₹2,499 FOR FREE SHIPPING</span>
+        <span id="ship-percent">0%</span>
+      </div>
+      <div class="ship-track"><span id="ship-fill"></span></div>
+    </div>
+
+    <div class="cart-body" data-lenis-prevent>
+      <div class="cart-items" id="cart-items"><!-- rendered by app.js --></div>
+      <div class="cross-sell" id="cross-sell"><!-- rendered by app.js --></div>
+    </div>
+
+    <footer class="cart-foot">
+      <div class="cart-subtotal mono"><span>SUBTOTAL</span><strong id="cart-subtotal">₹0</strong></div>
+      <p class="mono cart-note">Taxes included. Shipping calculated at checkout.</p>
+      <button class="btn-solid full" id="checkout-btn">
+        <span>CHECKOUT</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      </button>
+      <p class="mono cart-trust">UPI / CARD / COD — 30-DAY EXCHANGE</p>
+    </footer>
+  </aside>
+
+  <!-- ============================================================
+       CHECKOUT MODAL
+  ============================================================ -->
+  <div class="modal" id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true">
+    <div class="modal-backdrop" data-close-checkout></div>
+    <div class="modal-card" data-lenis-prevent>
+      <button class="icon-btn modal-close" data-close-checkout aria-label="Close checkout">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+
+      <div id="checkout-body">
+        <span class="eyebrow mono">SECURE CHECKOUT</span>
+        <h2 id="checkout-title">ORDER REVIEW</h2>
+
+        <div class="checkout-summary" id="checkout-summary"><!-- rendered --></div>
+
+        <form id="checkout-form">
+          <fieldset class="pay-options">
+            <legend class="mono">PAYMENT METHOD</legend>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="UPI" checked />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>UPI</strong><small class="mono">GPay / PhonePe / Paytm — instant</small></span>
+              <span class="mono pay-badge">₹0 FEE</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="CARD" />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>CARD</strong><small class="mono">Visa / Mastercard / RuPay</small></span>
+              <span class="mono pay-badge">3D SECURE</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="COD" />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>COD</strong><small class="mono">Cash on delivery</small></span>
+              <span class="mono pay-badge">+₹49</span>
+            </label>
+          </fieldset>
+
+          <button class="btn-solid full" type="submit">
+            <span>PLACE ORDER</span>
+            <span class="mono" id="pay-total">₹0</span>
+          </button>
+          <p class="mono checkout-note">By placing this order you agree to our 30-day exchange policy. Demo storefront — no payment is captured.</p>
+        </form>
+      </div>
+
+      <div id="checkout-success" hidden>
+        <div class="success-mark">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <span class="eyebrow mono">ORDER CONFIRMED</span>
+        <h2>YOU'RE IN.</h2>
+        <p id="success-copy">Order TJF-000000 is locked. A confirmation is on its way.</p>
+        <div class="success-meta mono">
+          <div><span>PAID VIA</span><strong id="success-payment">UPI</strong></div>
+          <div><span>TOTAL</span><strong id="success-total">₹0</strong></div>
+          <div><span>ETA</span><strong>3–5 DAYS</strong></div>
+        </div>
+        <button class="btn-solid full" data-close-checkout>KEEP BROWSING</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Libraries via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

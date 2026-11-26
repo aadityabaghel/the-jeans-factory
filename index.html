@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE JEANS FACTORY — Raw Selvedge Denim, Engineered in India</title>
+  <meta name="description" content="Heavyweight Indian denim, cut for the street. Six signature fits, limited SS26 drops and a fit finder built for real bodies. Free shipping above ₹2,499." />
+  <meta name="theme-color" content="#161616" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23141414'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='26' fill='%23F5F5F0'%3ET%3C/text%3E%3C/svg%3E" />
+
+  <!-- Fonts: Anton (display grotesque), Syne (editorial sans), Space Mono (technical mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css?v=9" />
+</head>
+<body>
+
+  <!-- ============================================================
+       PRELOADER (CSS auto-dismiss fallback included)
+  ============================================================ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <span class="preloader-word mono">THE JEANS FACTORY</span>
+      <span class="preloader-count mono" id="preloader-count">00</span>
+    </div>
+    <div class="preloader-bar"><span id="preloader-fill"></span></div>
+    <p class="preloader-note mono">RAW SELVEDGE / SS26</p>
+  </div>
+
+  <!-- Texture + fixed chrome -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-fill"></span></div>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <header class="nav" id="nav">
+    <a class="wordmark" href="#top" aria-label="The Jeans Factory home">
+      <span class="wordmark-main">THE JEANS</span>
+      <span class="wordmark-sub mono">FACTORY®</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#fits">Fits</a>
+      <a href="#craft">Craft</a>
+      <a href="#drops">Drops</a>
+      <a href="#fitfinder">Fit Finder</a>
+      <a href="#lookbook">Lookbook</a>
+      <a href="#factory">Factory</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-drop mono" href="#drops"><i></i>SS26 DROP LIVE</a>
+      <button class="cart-btn mono" data-open-cart aria-label="Open cart">
+        CART <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav aria-label="Mobile">
+      <a href="#fits"><span class="mono">01</span>Fits</a>
+      <a href="#craft"><span class="mono">02</span>Craft</a>
+      <a href="#drops"><span class="mono">03</span>Drops</a>
+      <a href="#fitfinder"><span class="mono">04</span>Fit Finder</a>
+      <a href="#lookbook"><span class="mono">05</span>Lookbook</a>
+      <a href="#factory"><span class="mono">06</span>Factory</a>
+    </nav>
+    <div class="mobile-menu-foot mono">
+      <span>EST. 2019 — INDIA</span>
+      <span>14OZ RING-SPUN</span>
+    </div>
+  </div>
+
+  <main id="top">
+
+    <!-- ============================================================
+         CHAPTER 01 — KINETIC HERO
+    ============================================================ -->
+    <section class="hero" id="hero">
+      <div class="hero-media">
+        <video class="hero-bg-video" autoplay muted loop playsinline preload="auto" poster="assets/fits/baggy.png">
+          <source src="assets/hero-walk.mp4" type="video/mp4" />
+        </video>
+        <div class="hero-veil" id="hero-veil" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero-type" aria-label="The Jeans Factory">
+        <div class="hero-line l1"><span>THE</span></div>
+        <div class="hero-line l2"><span>JEANS</span></div>
+        <div class="hero-line l3"><span>FACTORY</span></div>
+      </div>
+
+      <div class="hero-meta mono">
+        <span>EST. 2019 / INDIA</span>
+        <span class="hero-meta-mid">14OZ RING-SPUN SELVEDGE</span>
+        <span>SS26 — VOL. 04</span>
+      </div>
+
+      <a class="hero-cta" href="#drops">
+        <span>SHOP THE DROP</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      </a>
+
+      <div class="hero-scroll mono"><span>SCROLL TO UNRAVEL</span><i></i>01 / 06</div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 02 — THE FIT MORPH STAGE (pinned)
+    ============================================================ -->
+    <section class="fits" id="fits">
+      <div class="fits-pin">
+        <div class="section-tag mono"><span>CHAPTER 02</span> THE FIT MORPH</div>
+
+        <div class="fits-grid">
+          <div class="fits-visual">
+            <span class="fit-ghost" id="fit-ghost" aria-hidden="true">BAGGY</span>
+
+            <div class="fit-showcase" id="fit-showcase">
+              <div class="fit-editorial-media img-ph" id="fit-editorial-media">
+                <!-- 6 crossfading editorial denim photos rendered by app.js -->
+              </div>
+
+              <!-- Translucent Tailor Blueprint HUD Overlay -->
+              <div class="fit-blueprint-hud" aria-hidden="true">
+                <div class="fit-hud-top mono">
+                  <span id="fit-hud-code">SILHOUETTE 01 // BG-01</span>
+                  <span>TAILOR BLUEPRINT</span>
+                </div>
+
+                <!-- Rise callout -->
+                <div class="hud-callout hud-rise" id="hud-rise" style="--hud-y: 23%; --hud-x: 48%;">
+                  <span class="hud-pin"></span>
+                  <span class="hud-line"></span>
+                  <span class="hud-pill mono">RISE <strong id="hud-rise-val">11.5"</strong></span>
+                </div>
+
+                <!-- Knee bow callout -->
+                <div class="hud-callout hud-knee" id="hud-knee" style="--hud-y: 54%; --hud-x: 34%;">
+                  <span class="hud-pin"></span>
+                  <span class="hud-line"></span>
+                  <span class="hud-pill mono">KNEE BOW <strong id="hud-knee-val">24.0"</strong></span>
+                </div>
+
+                <!-- Leg opening callout -->
+                <div class="hud-callout hud-hem" id="hud-hem" style="--hud-y: 83%; --hud-x: 52%;">
+                  <span class="hud-pin"></span>
+                  <span class="hud-line"></span>
+                  <span class="hud-pill mono">LEG OPENING <strong id="hud-hem-val">19.5"</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="fit-index mono"><span id="fit-current">01</span><span class="fit-index-div">/</span><span>06</span></div>
+          </div>
+
+          <div class="fits-info">
+            <div class="eyebrow mono">SILHOUETTE STUDY / SIX CUTS</div>
+            <h2 class="fit-name" id="fit-name">BAGGY</h2>
+            <p class="fit-desc" id="fit-desc">Dropped crotch, generous thigh and a stacked hem. Cut from 14oz rigid denim that breaks in like a favourite record.</p>
+
+            <dl class="specs">
+              <div><dt class="mono">LEG OPENING</dt><dd id="spec-leg">19.5"</dd></div>
+              <div><dt class="mono">RISE</dt><dd id="spec-rise">11.5"</dd></div>
+              <div><dt class="mono">FABRIC</dt><dd id="spec-gsm">420 GSM</dd></div>
+              <div><dt class="mono">WASH CODE</dt><dd id="spec-wash">RAW INDIGO</dd></div>
+            </dl>
+
+            <button class="btn-outline" id="explore-fit">
+              <span>EXPLORE FIT</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M9 6h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+
+            <a class="fit-shop-link mono" id="fit-shop-link" href="product.html?id=acid-baggy">SHOP THIS FIT →</a>
+
+            <div class="fit-dots" id="fit-dots" role="tablist" aria-label="Silhouettes">
+              <button class="fit-dot is-active" data-fit-index="0" aria-label="Baggy" role="tab"></button>
+              <button class="fit-dot" data-fit-index="1" aria-label="Straight" role="tab"></button>
+              <button class="fit-dot" data-fit-index="2" aria-label="Wide-Leg" role="tab"></button>
+              <button class="fit-dot" data-fit-index="3" aria-label="Carpenter" role="tab"></button>
+              <button class="fit-dot" data-fit-index="4" aria-label="Bootcut" role="tab"></button>
+              <button class="fit-dot" data-fit-index="5" aria-label="Slim" role="tab"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 03 — INTERACTIVE DENIM X-RAY LAB
+    ============================================================ -->
+    <section class="craft" id="craft">
+      <div class="craft-pin">
+        <div class="craft-lab-grid">
+          <!-- Left: Technical Spec Readout -->
+          <div class="craft-lab-left">
+            <div class="section-tag mono light"><span>CHAPTER 03</span> DENIM ANATOMY &amp; X-RAY LAB</div>
+            <h2 class="craft-title">INSIDE<br />THE <em>WEAVE</em></h2>
+
+            <!-- Step Tabs -->
+            <div class="craft-tabs mono" role="tablist" aria-label="Denim anatomy hotspots">
+              <button type="button" class="craft-tab is-active" data-craft-step="0" role="tab" aria-selected="true">01 WEAVE</button>
+              <button type="button" class="craft-tab" data-craft-step="1" role="tab" aria-selected="false">02 STITCH</button>
+              <button type="button" class="craft-tab" data-craft-step="2" role="tab" aria-selected="false">03 RIVETS</button>
+              <button type="button" class="craft-tab" data-craft-step="3" role="tab" aria-selected="false">04 WASH</button>
+            </div>
+
+            <!-- Telemetry Spec Panel -->
+            <div class="craft-telemetry" aria-live="polite">
+              <div class="craft-telemetry-head">
+                <span class="mono craft-num" id="craft-spec-num">01 / SELVEDGE WEAVE</span>
+                <span class="mono craft-zoom-tag" id="craft-zoom-tag">ZOOM 1.28× · SCAN ACTIVE</span>
+              </div>
+              <h3 class="craft-spec-title" id="craft-spec-title">14OZ RING-SPUN SELVEDGE</h3>
+              <p class="craft-spec-desc" id="craft-spec-desc">3x1 right-hand twill milled on slow shuttle looms. Unsanforized slub yarn built to mold to your stride over years of wear.</p>
+
+              <dl class="craft-metrics mono">
+                <div>
+                  <dt>FABRIC WEIGHT</dt>
+                  <dd><span id="craft-m-weight">14OZ / 450 GSM</span><span class="craft-meter-track"><i id="craft-meter-weight"></i></span></dd>
+                </div>
+                <div>
+                  <dt>STITCH CONSTRUCTION</dt>
+                  <dd><span id="craft-m-stitch">11 SPI · LOCKSTITCH</span><span class="craft-meter-track"><i id="craft-meter-stitch"></i></span></dd>
+                </div>
+                <div>
+                  <dt>HARDWARE</dt>
+                  <dd><span id="craft-m-hardware">YKK JAPAN BRASS</span><span class="craft-meter-track"><i id="craft-meter-hardware"></i></span></dd>
+                </div>
+                <div>
+                  <dt>LOW-WATER FINISH</dt>
+                  <dd><span id="craft-m-water">78% WATER SAVED</span><span class="craft-meter-track"><i id="craft-meter-water"></i></span></dd>
+                </div>
+              </dl>
+            </div>
+
+          </div>
+
+          <!-- Right: Macro Denim X-Ray Showcase with 4 Clickable & Scroll-Synced Hotspots -->
+          <div class="craft-lab-right">
+            <div class="craft-stage" id="craft-stage">
+              <div class="craft-macro-layer" id="craft-macro-layer">
+                <div class="craft-macro-img">
+                  <img class="craft-hotspot-image is-active" data-craft-image="0" src="https://images.pexels.com/photos/34851014/pexels-photo-34851014.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1600" alt="Dark indigo 14oz ring-spun selvedge twill weave macro" loading="eager" />
+                  <img class="craft-hotspot-image" data-craft-image="1" src="https://images.pexels.com/photos/10133277/pexels-photo-10133277.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1600" alt="Heavy denim pocket with contrast bar-tack seam stitching" loading="eager" />
+                  <img class="craft-hotspot-image" data-craft-image="2" src="https://images.pexels.com/photos/13976002/pexels-photo-13976002.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1600" alt="Metallic copper rivets and denim hardware detail" loading="eager" />
+                  <img class="craft-hotspot-image" data-craft-image="3" src="https://images.pexels.com/photos/7794358/pexels-photo-7794358.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1600" alt="Faded vintage washed denim texture" loading="eager" />
+                </div>
+                <div class="craft-xray-grid" aria-hidden="true"></div>
+
+                <!-- 4 Hotspot Pins -->
+                <button type="button" class="craft-pin-btn is-active" data-craft-step="0" style="left: 28%; top: 32%;" aria-label="01. 14oz Ring-Spun Selvedge">
+                  <span class="pin-parallax"><span class="pin-entry">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-dot">01</span>
+                    <span class="pin-label mono">14OZ RING-SPUN SELVEDGE</span>
+                  </span></span>
+                </button>
+
+                <button type="button" class="craft-pin-btn" data-craft-step="1" style="left: 66%; top: 36%;" aria-label="02. Bar-Tack Stress Stitching">
+                  <span class="pin-parallax"><span class="pin-entry">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-dot">02</span>
+                    <span class="pin-label mono">BAR-TACK STRESS STITCHING</span>
+                  </span></span>
+                </button>
+
+                <button type="button" class="craft-pin-btn" data-craft-step="2" style="left: 36%; top: 68%;" aria-label="03. Custom Engraved Copper Rivets">
+                  <span class="pin-parallax"><span class="pin-entry">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-dot">03</span>
+                    <span class="pin-label mono">CUSTOM ENGRAVED COPPER RIVETS</span>
+                  </span></span>
+                </button>
+
+                <button type="button" class="craft-pin-btn" data-craft-step="3" style="left: 72%; top: 70%;" aria-label="04. Low-Water Eco-Ozone Wash">
+                  <span class="pin-parallax"><span class="pin-entry">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-dot">04</span>
+                    <span class="pin-label mono">LOW-WATER ECO-OZONE WASH</span>
+                  </span></span>
+                </button>
+              </div>
+
+              <div class="craft-progress-rail mono" aria-label="Craft step progress">
+                <span id="craft-progress-current">01 / 04</span>
+                <div class="craft-progress-track"><i id="craft-progress-fill"></i></div>
+                <span>04</span>
+              </div>
+              <div class="craft-scanline" aria-hidden="true"></div>
+              <!-- HUD Overlay -->
+              <div class="craft-hud-top mono" aria-hidden="true">
+                <span id="craft-hud-coord">X: 28% · Y: 32%</span>
+                <span>X-RAY LAB // LIVE SCAN</span>
+              </div>
+              <div class="craft-hud-bottom mono" aria-hidden="true">
+                <span id="craft-hud-active">01. 14OZ RING-SPUN SELVEDGE</span>
+                <span>SCROLL OR TAP PINS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="craft-foot mono">
+          <span>LOT TJF-SS26 · UNIT 04</span>
+          <span>STITCH DENSITY: 11 SPI · HARDWARE: YKK JAPAN BRASS</span>
+          <span>MILLED IN INDIA — WORN EVERYWHERE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 04 — SHOP BY FIT + 3-COLUMN EDITORIAL COLLECTION GRID
+    ============================================================ -->
+    <section class="drops" id="drops">
+      <div class="collection-shell">
+        <header class="collection-head">
+          <div class="runway-eyebrow-bar">
+            <div class="section-tag mono"><span>CHAPTER 04</span> DROP 04 // SS26 COLLECTION</div>
+            <div class="runway-edition mono"><i></i>LIMITED BATCH OF 150 PAIRS</div>
+          </div>
+
+          <!-- 1. TOP "SHOP THE LINEUP" HORIZONTAL CAROUSEL -->
+          <div class="shop-fit-head">
+            <h2 class="runway-title">SHOP THE LINEUP</h2>
+            <div class="fit-carousel-arrows">
+              <button type="button" class="carousel-arrow" id="fit-carousel-prev" aria-label="Scroll fits left">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </button>
+              <button type="button" class="carousel-arrow" id="fit-carousel-next" aria-label="Scroll fits right">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="fit-carousel-track" id="fit-carousel-track" role="region" aria-label="Shop by fit"><!-- rendered by app.js --></div>
+        </header>
+
+        <!-- 2. TOOLBAR + "FILTER FOR YOU" TABBED STRIP -->
+        <div class="collection-controls">
+          <div class="collection-toolbar">
+            <div class="toolbar-left">
+              <button class="filter-open-btn" id="filter-open" data-open-filter aria-haspopup="dialog" aria-controls="filter-drawer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+                <span class="mono">FILTER / SORT</span>
+                <span class="filter-count mono" id="filter-count">0</span>
+              </button>
+              <div class="runway-filter mono" id="runway-filter" hidden>
+                <span id="runway-filter-name"></span>
+                <button type="button" id="clear-filter" aria-label="Clear all filters">RESET ✕</button>
+              </div>
+            </div>
+
+            <div class="toolbar-right">
+              <span class="collection-count mono" id="collection-count">12 Items</span>
+              <label class="sort-wrap" for="collection-sort">
+                <span class="mono sort-label">SORT:</span>
+                <select id="collection-sort" class="collection-sort mono" aria-label="Sort products">
+                  <option value="featured">Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="newest">Newest</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-for-you" aria-label="Filter for you">
+            <div class="ffy-head">
+              <span class="ffy-title mono">FILTER FOR YOU</span>
+              <div class="ffy-tabs" id="ffy-tabs" role="tablist" aria-label="Filter categories">
+                <button type="button" class="ffy-tab is-active" data-ffy-tab="style" role="tab" aria-selected="true">Style</button>
+                <button type="button" class="ffy-tab" data-ffy-tab="size" role="tab" aria-selected="false">Size</button>
+                <button type="button" class="ffy-tab" data-ffy-tab="pattern" role="tab" aria-selected="false">Pattern</button>
+                <button type="button" class="ffy-tab" data-ffy-tab="color" role="tab" aria-selected="false">Color</button>
+                <button type="button" class="ffy-tab" data-ffy-tab="discount" role="tab" aria-selected="false">Discount</button>
+              </div>
+            </div>
+            <div class="ffy-chips" id="ffy-chips"><!-- rendered by app.js --></div>
+          </div>
+        </div>
+
+        <!-- 3. 3-COLUMN TALL PRODUCT GRID + MID-GRID BANNER -->
+        <div class="collection-grid" id="collection-grid"><!-- rendered by app.js --></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 05 — INTERACTIVE FIT FINDER
+    ============================================================ -->
+    <section class="finder" id="fitfinder">
+      <div class="finder-bg" aria-hidden="true"></div>
+      <div class="finder-split">
+        <div class="finder-left">
+          <div class="section-tag mono"><span>CHAPTER 05</span> FIT FINDER</div>
+          <h2 class="finder-title">YOUR<br />PERFECT<br /><span>PAIR.</span></h2>
+          <p class="finder-intro">Two sliders. Zero guesswork. Our pattern room calibrated this against 12,000 Indian body scans.</p>
+
+          <div class="finder-controls">
+            <div class="control-head">
+              <span class="mono">HEIGHT</span>
+              <div class="unit-toggle mono" role="group" aria-label="Height units">
+                <button class="is-active" data-unit="cm">CM</button>
+                <button data-unit="ft">FT</button>
+              </div>
+            </div>
+            <div class="control-value"><span id="height-value">175</span><small id="height-unit">cm</small><em id="height-ft">5'9"</em></div>
+            <input type="range" id="height-range" min="150" max="200" value="175" step="1" aria-label="Height" />
+            <div class="range-scale mono"><span>150</span><span>200</span></div>
+
+            <div class="control-head">
+              <span class="mono">WAIST</span>
+              <span class="mono control-hint">INCHES</span>
+            </div>
+            <div class="control-value"><span id="waist-value">32</span><small>in</small><em id="waist-cm">81 cm</em></div>
+            <input type="range" id="waist-range" min="26" max="44" value="32" step="1" aria-label="Waist in inches" />
+            <div class="range-scale mono"><span>26</span><span>44</span></div>
+          </div>
+
+          <div class="finder-result">
+            <div class="result-block">
+              <span class="mono">RECOMMENDED SIZE</span>
+              <strong id="result-size">W32 / L32</strong>
+            </div>
+            <div class="result-block">
+              <span class="mono">BEST SILHOUETTE</span>
+              <strong id="result-fit">WIDE-LEG</strong>
+            </div>
+            <button class="btn-solid" id="shop-size-btn">
+              <span>SHOP RECOMMENDED SIZE</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="finder-right">
+          <div class="finder-cad-wrap">
+            <!-- Dark-Mode Denim Factory CAD Tech-Pack Blueprint -->
+            <div class="finder-cad" id="finder-cad">
+              <div class="finder-cad-grid" aria-hidden="true"></div>
+              <div class="cad-head mono">
+                <span>CAD TECH-PACK // TJF-SS26</span>
+                <span id="cad-fit-code">PATTERN: WL-03</span>
+              </div>
+
+              <div class="cad-stage">
+                <svg class="cad-svg" viewBox="0 0 380 430" role="img" aria-label="Technical CAD pattern schematic with live dimensions">
+                  <!-- Technical Pattern Outline + Dotted Seam Allowances -->
+                  <path id="cad-seam-allow" class="cad-seam" fill="none" />
+                  <path id="cad-outline" class="cad-outline" fill="rgba(29, 78, 216, 0.08)" />
+                  <rect id="cad-waistband" class="cad-outline" fill="rgba(245, 245, 240, 0.05)" rx="2" />
+                  <path id="cad-center-crease" class="cad-crease" fill="none" />
+                  <path id="cad-fly-pockets" class="cad-detail" fill="none" />
+
+                  <!-- YKK Hardware Callout -->
+                  <circle id="cad-rivet-l" r="3.2" fill="#EA580C" />
+                  <circle id="cad-rivet-r" r="3.2" fill="#EA580C" />
+                  <line id="cad-ykk-leader" class="cad-ykk-line" />
+                  <text id="cad-ykk-text" class="cad-svg-mono" fill="#F5F5F0">YKK NO.5 BRASS ZIP</text>
+
+                  <!-- Live Animated Laser Dimension Lines -->
+                  <!-- WAIST -->
+                  <g class="cad-dim cad-dim-orange">
+                    <line id="dim-waist-line" />
+                    <line id="dim-waist-cap-l" /><line id="dim-waist-cap-r" />
+                  </g>
+                  <!-- THIGH -->
+                  <g class="cad-dim cad-dim-indigo">
+                    <line id="dim-thigh-line" />
+                    <line id="dim-thigh-cap-l" /><line id="dim-thigh-cap-r" />
+                  </g>
+                  <!-- INSEAM -->
+                  <g class="cad-dim cad-dim-indigo">
+                    <line id="dim-inseam-line" />
+                    <line id="dim-inseam-cap-t" /><line id="dim-inseam-cap-b" />
+                  </g>
+                  <!-- OUTSEAM -->
+                  <g class="cad-dim cad-dim-orange">
+                    <line id="dim-outseam-line" />
+                    <line id="dim-outseam-cap-t" /><line id="dim-outseam-cap-b" />
+                  </g>
+                </svg>
+
+                <!-- Floating Monospace Laser Dimension Readouts -->
+                <div class="cad-readout cad-r-waist mono" id="cad-r-waist">WAIST 32"</div>
+                <div class="cad-readout cad-r-thigh mono" id="cad-r-thigh">THIGH 24.0"</div>
+                <div class="cad-readout cad-r-inseam mono" id="cad-r-inseam">INSEAM 32.0"</div>
+                <div class="cad-readout cad-r-outseam mono" id="cad-r-outseam">OUTSEAM 42.0"</div>
+              </div>
+
+              <div class="cad-foot mono">
+                <span id="callout-height">HEIGHT 175 CM</span>
+                <span>SEAM ALLOWANCE 1.2 CM</span>
+                <span id="callout-waist">WAIST W32</span>
+              </div>
+            </div>
+
+            <!-- Live Mini Product Preview Card -->
+            <div class="finder-preview-card" id="finder-preview-card">
+              <a class="finder-preview-thumb studio-box" id="finder-preview-link" href="product.html?id=ozone-straight" aria-label="View recommended jeans">
+                <img id="finder-preview-img" src="assets/fits/straight.png" alt="Recommended jeans preview" loading="lazy" />
+              </a>
+              <div class="finder-preview-info">
+                <span class="finder-preview-kicker mono" id="finder-preview-fit">STRAIGHT · 420 GSM</span>
+                <h3 id="finder-preview-name">Ozone Straight-Leg</h3>
+                <div class="finder-preview-meta mono">
+                  <span class="finder-preview-size" id="finder-preview-size">W32 / L32</span>
+                  <span class="finder-preview-price" id="finder-preview-price">₹2,399</span>
+                </div>
+              </div>
+              <button type="button" class="btn-solid finder-add-btn" id="finder-add-btn">
+                <span id="finder-add-label">ADD RECOMMENDED SIZE</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 06 — STREET LOOKBOOK WALL (staggered velocity)
+    ============================================================ -->
+    <section class="lookbook" id="lookbook">
+      <div class="lookbook-head">
+        <div class="section-tag mono"><span>CHAPTER 06</span> STREET LOOKBOOK</div>
+        <h2 class="lookbook-title">WORN <em>IN</em><br />THE WILD</h2>
+        <p class="lookbook-intro">Shot on 35mm across Bandra, Majnu ka Tilla and Indiranagar. Tap a tag to shop the exact fit.</p>
+      </div>
+      <section class="wash-compare" aria-labelledby="wash-compare-title">
+        <div class="wash-compare-head">
+          <h3 id="wash-compare-title">BEFORE &amp; AFTER WASH — DRAG SLIDER TO COMPARE</h3>
+          <span id="craft-compare-val" class="mono">50% RAW / 50% WASH</span>
+        </div>
+        <div class="wash-compare-stage" id="craft-compare-stage" role="group" aria-label="Raw and washed denim comparison">
+          <div class="wash-compare-after">
+            <img src="assets/fits/wide-light.png" alt="Vintage enzyme washed indigo denim" loading="lazy" />
+            <span class="wash-compare-tag after mono">VINTAGE ENZYME WASH</span>
+          </div>
+          <div class="wash-compare-before" id="craft-compare-before">
+            <img src="assets/fits/raw-selvedge.png" alt="Dark unwashed raw indigo denim" loading="lazy" />
+            <span class="wash-compare-tag before mono">UNWASHED RAW INDIGO</span>
+          </div>
+          <div class="wash-compare-handle" id="craft-compare-handle" aria-hidden="true">
+            <span>&lt; DRAG &gt;</span>
+          </div>
+          <input type="range" id="craft-compare-range" min="5" max="95" value="50" aria-label="Drag to compare unwashed raw indigo and vintage enzyme wash" />
+        </div>
+      </section>
+      <div class="lookbook-wall" id="lookbook-wall"><!-- rendered by app.js --></div>
+      <div class="lookbook-foot mono">
+        <span>9 LOOKS / SS26</span>
+        <span>#WORNINTHEWILD</span>
+        <span>SHOT ON FILM — NOT FILTERED</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 07 — THE FACTORY CRAFT TIMELINE
+    ============================================================ -->
+    <section class="factory" id="factory">
+      <div class="factory-head">
+        <div class="section-tag mono"><span>CHAPTER 07</span> THE FACTORY</div>
+        <h2 class="factory-title">FROM RAW<br /><em>FIBRE</em> TO<br />RAW EDGE</h2>
+        <p class="factory-intro">Four stages, one pair of jeans. Scroll the line to follow our cotton from the bale to the final zipper pull — no shortcuts, no greenwash.</p>
+        <div class="factory-head-meta mono">
+          <span>UNIT 04 — TIRUPUR, IN</span>
+          <span>EST. 2019</span>
+        </div>
+      </div>
+
+      <div class="factory-timeline">
+        <div class="factory-line" aria-hidden="true"><span id="factory-progress"></span></div>
+
+        <article class="factory-step">
+          <div class="factory-marker"><span class="factory-num">01</span></div>
+          <div class="factory-step-inner">
+            <div class="factory-media">
+              <img src="https://images.pexels.com/photos/34851004/pexels-photo-34851004.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Raw cotton and selvedge denim weave" loading="eager" />
+            </div>
+            <div class="factory-copy">
+              <span class="mono factory-kicker">STAGE 01 — SPINNING</span>
+              <h3>RAW COTTON<br />SPINNING</h3>
+              <p>Long-staple Indian cotton is combed and ring-spun into 14oz denim on slow shuttle looms. The irregular slub is deliberate — it's what gives every pair its own grain.</p>
+              <dl class="factory-specs mono">
+                <div><dt>YARN</dt><dd>14OZ / 3x1 TWILL</dd></div>
+                <div><dt>LOOM</dt><dd>SHUTTLE / SELVEDGE</dd></div>
+              </dl>
+            </div>
+          </div>
+        </article>
+
+        <article class="factory-step">
+          <div class="factory-marker"><span class="factory-num">02</span></div>
+          <div class="factory-step-inner">
+            <div class="factory-media">
+              <img src="https://images.pexels.com/photos/32641555/pexels-photo-32641555.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Rope-dyed denim and loom construction" loading="eager" />
+            </div>
+            <div class="factory-copy">
+              <span class="mono factory-kicker">STAGE 02 — DYEING</span>
+              <h3>ROPE-<br />DYEING</h3>
+              <p>Yarn is dipped in indigo eight times and oxidised in open air between passes. The rope-dye vats leave the core white — the reason the fades you earn look honest, not printed.</p>
+              <dl class="factory-specs mono">
+                <div><dt>DIPS</dt><dd>8 × INDIGO</dd></div>
+                <div><dt>CORE</dt><dd>WHITE / ROPE-DYED</dd></div>
+              </dl>
+            </div>
+          </div>
+        </article>
+
+        <article class="factory-step">
+          <div class="factory-marker"><span class="factory-num">03</span></div>
+          <div class="factory-step-inner">
+            <div class="factory-media">
+              <img src="https://images.pexels.com/photos/16603755/pexels-photo-16603755.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Copper rivets and hardware quality control" loading="eager" />
+            </div>
+            <div class="factory-copy">
+              <span class="mono factory-kicker">STAGE 03 — FINISHING</span>
+              <h3>LOW-WATER<br />OZONE LASER</h3>
+              <p>Ozone gas and laser mapping replace pumice, bleach and stone dust. Whiskers and fades are plotted to the millimetre while using 78% less water than a conventional wash house.</p>
+              <dl class="factory-specs mono">
+                <div><dt>WATER</dt><dd>−78%</dd></div>
+                <div><dt>FINISH</dt><dd>OZONE / LASER</dd></div>
+              </dl>
+            </div>
+          </div>
+        </article>
+
+        <article class="factory-step">
+          <div class="factory-marker"><span class="factory-num">04</span></div>
+          <div class="factory-step-inner">
+            <div class="factory-media">
+              <img src="https://images.pexels.com/photos/19203164/pexels-photo-19203164.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Low-water ozone and laser denim finishing" loading="eager" />
+            </div>
+            <div class="factory-copy">
+              <span class="mono factory-kicker">STAGE 04 — INSPECTION</span>
+              <h3>YKK ZIPPER &amp;<br />HARDWARE QC</h3>
+              <p>YKK zippers and solid-brass rivets are torque-tested and pulled 500 times before sign-off. Every bar-tack is checked at 42 stitches; heavy canvas pockets get a second look.</p>
+              <dl class="factory-specs mono">
+                <div><dt>ZIPPER</dt><dd>YKK / NO.5 BRASS</dd></div>
+                <div><dt>QC</dt><dd>500× PULL TEST</dd></div>
+              </dl>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="factory-foot mono">
+        <span>LOT TJF-SS26 — UNIT 04</span>
+        <span>MADE IN INDIA / WORN EVERYWHERE</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+    <footer class="footer">
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="footer-marquee-track">
+          <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+          <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="mono">RAW SELVEDGE<br />ENGINEERED IN INDIA</p>
+          <h3>BUILT<br />TO OUTLIVE<br />THE TREND.</h3>
+        </div>
+
+        <div class="footer-col">
+          <span class="mono">SHOP</span>
+          <a href="#fits">Signature Fits</a>
+          <a href="#drops">SS26 Drop</a>
+          <a href="#fitfinder">Fit Finder</a>
+          <a href="#lookbook">Lookbook</a>
+        </div>
+
+        <div class="footer-col">
+          <span class="mono">STUDIO</span>
+          <a href="#craft">Fabric &amp; Craft</a>
+          <a href="#lookbook">Lookbook</a>
+          <a href="#" data-toast="Stockist list drops soon.">Stockists</a>
+          <a href="#" data-toast="Care guide: cold wash, inside out, hang dry.">Care Guide</a>
+        </div>
+
+        <form class="footer-news" id="newsletter-form">
+          <label for="newsletter-email" class="mono">JOIN THE MILL LIST</label>
+          <p class="mono">Drop alerts, restocks, zero spam.</p>
+          <div class="news-row">
+            <input type="email" id="newsletter-email" placeholder="you@email.com" required autocomplete="email" />
+            <button type="submit" aria-label="Subscribe">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="footer-bottom mono">
+        <span>© 2026 THE JEANS FACTORY</span>
+        <span>MADE WITH HEAVY DENIM &amp; LIGHTER DAYS</span>
+        <span>INR ₹ / INDIA</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ============================================================
+       CATALOG FILTER DRAWER
+  ============================================================ -->
+  <div class="filter-overlay" id="filter-overlay" data-close-filter></div>
+  <aside class="filter-drawer" id="filter-drawer" role="dialog" aria-modal="true" aria-labelledby="filter-title" aria-hidden="true">
+    <header class="filter-head">
+      <div>
+        <span class="eyebrow mono">REFINE THE RUNWAY</span>
+        <h2 id="filter-title">FILTERS</h2>
+      </div>
+      <button class="icon-btn" data-close-filter aria-label="Close filters">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </header>
+
+    <div class="filter-body" id="filter-groups" data-lenis-prevent><!-- rendered by app.js --></div>
+
+    <footer class="filter-foot">
+      <div class="filter-result mono"><span id="filter-result-count">08</span> / <span id="filter-total">08</span> FITS MATCH</div>
+      <button class="btn-solid full" id="filter-apply">
+        <span>SHOW RESULTS</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      </button>
+      <button class="filter-reset mono" id="filter-reset-btn">RESET ALL FILTERS</button>
+    </footer>
+  </aside>
+
+  <!-- ============================================================
+       PRODUCT QUICK-VIEW / DETAIL MODAL
+  ============================================================ -->
+  <div class="product-modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="pd-name" aria-hidden="true">
+    <div class="product-backdrop" data-close-product></div>
+    <div class="product-sheet">
+      <button class="icon-btn product-close" data-close-product aria-label="Close product view">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+
+      <div class="product-scroll" id="product-scroll" data-lenis-prevent>
+        <div class="product-hero">
+          <div class="product-gallery">
+            <div class="product-shot img-ph"><img id="pd-image" src="" alt="" loading="lazy" /></div>
+            <div class="product-shot product-shot-flat img-ph">
+              <img id="pd-image-flat" src="" alt="" loading="lazy" />
+              <span class="product-flat-tag mono">FLAT-LAY</span>
+            </div>
+          </div>
+
+          <div class="product-summary">
+            <span class="mono product-breadcrumb" id="pd-breadcrumb"></span>
+            <h2 id="pd-name"></h2>
+            <div class="pd-price-row">
+              <span class="pd-price" id="pd-price"></span>
+              <span class="mono pd-wash" id="pd-wash"></span>
+            </div>
+            <p class="pd-desc" id="pd-desc"></p>
+            <div class="pd-tags mono">
+              <span id="pd-rise"></span>
+              <span id="pd-distress"></span>
+              <span id="pd-gsm"></span>
+            </div>
+
+            <div class="pd-block" id="pd-stretch">
+              <div class="pd-block-head">
+                <span class="mono">FABRIC STRETCH METER</span>
+                <span class="mono pd-readout" id="pd-stretch-readout">0% ELASTANE</span>
+              </div>
+              <div class="stretch-meter">
+                <div class="stretch-track">
+                  <span class="stretch-actual" id="pd-stretch-actual"></span>
+                  <span class="stretch-fill" id="pd-stretch-fill"></span>
+                  <span class="stretch-knob" id="pd-stretch-knob"></span>
+                </div>
+                <input type="range" id="pd-stretch-range" min="0" max="15" step="1" value="0" aria-label="Explore fabric stretch percentage" />
+                <div class="stretch-labels mono"><span>RIGID 0%</span><span>COMFORT STRETCH</span></div>
+              </div>
+              <div class="stretch-copy">
+                <strong class="mono" id="pd-stretch-label">RIGID</strong>
+                <p id="pd-stretch-copy"></p>
+              </div>
+            </div>
+
+            <div class="pd-block tts">
+              <div class="pd-block-head">
+                <span class="mono">TRUE TO SIZE</span>
+                <span class="mono" id="tts-summary"></span>
+              </div>
+              <div class="tts-bars">
+                <div class="tts-row">
+                  <span class="mono">RUNS SMALL</span>
+                  <div class="tts-track"><span id="tts-small-bar" class="tts-fill small"></span></div>
+                  <span class="mono tts-val" id="tts-small-val"></span>
+                </div>
+                <div class="tts-row">
+                  <span class="mono">TRUE TO SIZE</span>
+                  <div class="tts-track"><span id="tts-true-bar" class="tts-fill true"></span></div>
+                  <span class="mono tts-val" id="tts-true-val"></span>
+                </div>
+                <div class="tts-row">
+                  <span class="mono">RUNS LARGE</span>
+                  <div class="tts-track"><span id="tts-large-bar" class="tts-fill large"></span></div>
+                  <span class="mono tts-val" id="tts-large-val"></span>
+                </div>
+              </div>
+              <p class="tts-note mono">CROWD-SOURCED FROM 2,418 FIT REVIEWS</p>
+            </div>
+
+            <div class="pd-block">
+              <div class="pd-block-head">
+                <span class="mono">SELECT SIZE</span>
+                <span class="mono" id="pd-size-readout">SIZE W32</span>
+              </div>
+              <div class="pd-sizes" id="pd-sizes"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-lower">
+          <div class="pd-block measure-block">
+            <div class="pd-block-head">
+              <span class="mono">FULL MEASUREMENT TABLE</span>
+              <span class="mono">IN INCHES</span>
+            </div>
+            <div class="measure-scroll"><table class="measure-table" id="pd-measure"></table></div>
+          </div>
+          <div class="pd-block care-block">
+            <div class="pd-block-head">
+              <span class="mono">WASH CARE GUIDE</span>
+              <span class="mono">KEEP IT RAW</span>
+            </div>
+            <ul class="care-list" id="pd-care"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="pd-sticky">
+        <div class="pd-sticky-info">
+          <span class="mono pd-sticky-name" id="pd-sticky-name"></span>
+          <span class="mono pd-sticky-price" id="pd-sticky-price"></span>
+        </div>
+        <div class="pd-sticky-sizes" id="pd-sticky-sizes"></div>
+        <button class="btn-solid pd-add-btn" id="pd-add">
+          <span>ADD TO BAG</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CART DRAWER
+  ============================================================ -->
+  <div class="drawer-overlay" id="drawer-overlay" data-close-cart></div>
+  <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
+    <header class="cart-head">
+      <div>
+        <span class="eyebrow mono">YOUR BAG</span>
+        <h2 id="cart-title">THE HAUL <span class="mono" id="cart-head-count">(0)</span></h2>
+      </div>
+      <button class="icon-btn" data-close-cart aria-label="Close cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </header>
+
+    <div class="ship-meter">
+      <div class="ship-meter-copy mono">
+        <span id="ship-copy">ADD ₹2,499 FOR FREE SHIPPING</span>
+        <span id="ship-percent">0%</span>
+      </div>
+      <div class="ship-track"><span id="ship-fill"></span></div>
+    </div>
+
+    <div class="cart-body" data-lenis-prevent>
+      <div class="cart-items" id="cart-items"><!-- rendered by app.js --></div>
+      <div id="cross-sell"><!-- rendered by app.js --></div>
+    </div>
+
+    <footer class="cart-foot">
+      <div class="cart-subtotal mono"><span>SUBTOTAL</span><strong id="cart-subtotal">₹0</strong></div>
+      <p class="mono cart-note">Taxes included. Shipping calculated at checkout.</p>
+      <button class="btn-solid full" id="checkout-btn">
+        <span>CHECKOUT</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      </button>
+      <p class="mono cart-trust">UPI / CARD / COD — 30-DAY EXCHANGE</p>
+    </footer>
+  </aside>
+
+  <!-- ============================================================
+       CHECKOUT MODAL
+  ============================================================ -->
+  <div class="modal" id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true">
+    <div class="modal-backdrop" data-close-checkout></div>
+    <div class="modal-card" data-lenis-prevent>
+      <button class="icon-btn modal-close" data-close-checkout aria-label="Close checkout">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+
+      <div id="checkout-body">
+        <span class="eyebrow mono">SECURE CHECKOUT</span>
+        <h2 id="checkout-title">ORDER REVIEW</h2>
+
+        <div class="checkout-summary" id="checkout-summary"><!-- rendered --></div>
+
+        <form id="checkout-form">
+          <fieldset class="pay-options">
+            <legend class="mono">PAYMENT METHOD</legend>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="UPI" checked />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>UPI</strong><small class="mono">GPay / PhonePe / Paytm — instant</small></span>
+              <span class="mono pay-badge">₹0 FEE</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="CARD" />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>CARD</strong><small class="mono">Visa / Mastercard / RuPay</small></span>
+              <span class="mono pay-badge">3D SECURE</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="COD" />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>COD</strong><small class="mono">Cash on delivery</small></span>
+              <span class="mono pay-badge">+₹49</span>
+            </label>
+          </fieldset>
+
+          <button class="btn-solid full" type="submit">
+            <span>PLACE ORDER</span>
+            <span class="mono" id="pay-total">₹0</span>
+          </button>
+          <p class="mono checkout-note">By placing this order you agree to our 30-day exchange policy. Demo storefront — no payment is captured.</p>
+        </form>
+      </div>
+
+      <div id="checkout-success" hidden>
+        <div class="success-mark">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <span class="eyebrow mono">ORDER CONFIRMED</span>
+        <h2>YOU'RE IN.</h2>
+        <p id="success-copy">Order TJF-000000 is locked. A confirmation is on its way.</p>
+        <div class="success-meta mono">
+          <div><span>PAID VIA</span><strong id="success-payment">UPI</strong></div>
+          <div><span>TOTAL</span><strong id="success-total">₹0</strong></div>
+          <div><span>ETA</span><strong>3–5 DAYS</strong></div>
+        </div>
+        <button class="btn-solid full" data-close-checkout>KEEP BROWSING</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Libraries via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <script src="app.js?v=9" defer></script>
+</body>
+</html>

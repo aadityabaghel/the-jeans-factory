@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — THE JEANS FACTORY</title>
+  <meta name="description" content="Secure checkout for your raw selvedge denim order." />
+  <meta name="theme-color" content="#161616" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23141414'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='26' fill='%23F5F5F0'%3ET%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="checkout-page">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="nav" id="nav">
+    <a class="wordmark" href="index.html" aria-label="The Jeans Factory home">
+      <span class="wordmark-main">THE JEANS</span>
+      <span class="wordmark-sub mono">FACTORY®</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary" style="display: none;"></nav>
+    <div class="nav-actions">
+      <a class="nav-drop mono" href="index.html#drops"><i></i>SS26 DROP LIVE</a>
+      <button class="cart-btn mono" aria-label="Cart" disabled style="opacity: 0.5; pointer-events: none;">
+        CART <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <a href="index.html" class="btn-outline mono" style="padding: 0.6rem 1rem;">CONTINUE SHOPPING</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="checkout-progress mono" aria-label="Checkout progress">
+      <span class="is-active">1 CONTACT</span>
+      <span class="separator" aria-hidden="true">/</span>
+      <span>2 SHIPPING</span>
+      <span class="separator" aria-hidden="true">/</span>
+      <span>3 PAYMENT</span>
+    </div>
+
+    <div class="checkout-grid">
+      <!-- Left: Form -->
+      <form class="checkout-form" id="checkout-form" novalidate>
+        <section class="checkout-section" aria-labelledby="contact-heading">
+          <h2 id="contact-heading" class="checkout-section-title mono">CONTACT INFORMATION</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email" class="mono">EMAIL</label>
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+            </div>
+            <div class="form-group">
+              <label for="phone" class="mono">PHONE</label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="+91 9xxxxxxxxx" inputmode="tel" />
+            </div>
+          </div>
+        </section>
+
+        <section class="checkout-section" aria-labelledby="shipping-heading">
+          <h2 id="shipping-heading" class="checkout-section-title mono">SHIPPING ADDRESS</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="mono">FIRST NAME</label>
+              <input type="text" id="firstName" name="firstName" required autocomplete="given-name" placeholder="First name" />
+            </div>
+            <div class="form-group">
+              <label for="lastName" class="mono">LAST NAME</label>
+              <input type="text" id="lastName" name="lastName" required autocomplete="family-name" placeholder="Last name" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="address1" class="mono">ADDRESS LINE 1</label>
+            <input type="text" id="address1" name="address1" required autocomplete="address-line1" placeholder="House/Building, Street" />
+          </div>
+          <div class="form-group">
+            <label for="address2" class="mono">ADDRESS LINE 2 (OPTIONAL)</label>
+            <input type="text" id="address2" name="address2" autocomplete="address-line2" placeholder="Apartment, Suite, Landmark" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city" class="mono">CITY</label>
+              <input type="text" id="city" name="city" required autocomplete="address-level2" placeholder="City" />
+            </div>
+            <div class="form-group">
+              <label for="state" class="mono">STATE</label>
+              <select id="state" name="state" required autocomplete="address-level1">
+                <option value="">Select State</option>
+                <option value="AN">Andaman and Nicobar Islands</option>
+                <option value="AP">Andhra Pradesh</option>
+                <option value="AR">Arunachal Pradesh</option>
+                <option value="AS">Assam</option>
+                <option value="BR">Bihar</option>
+                <option value="CH">Chandigarh</option>
+                <option value="CT">Chhattisgarh</option>
+                <option value="DN">Dadra and Nagar Haveli</option>
+                <option value="DD">Daman and Diu</option>
+                <option value="DL">Delhi</option>
+                <option value="GA">Goa</option>
+                <option value="GJ">Gujarat</option>
+                <option value="HR">Haryana</option>
+                <option value="HP">Himachal Pradesh</option>
+                <option value="JK">Jammu and Kashmir</option>
+                <option value="JH">Jharkhand</option>
+                <option value="KA">Karnataka</option>
+                <option value="KL">Kerala</option>
+                <option value="LD">Lakshadweep</option>
+                <option value="MP">Madhya Pradesh</option>
+                <option value="MH">Maharashtra</option>
+                <option value="MN">Manipur</option>
+                <option value="ML">Meghalaya</option>
+                <option value="MZ">Mizoram</option>
+                <option value="NL">Nagaland</option>
+                <option value="OR">Odisha</option>
+                <option value="PY">Puducherry</option>
+                <option value="PB">Punjab</option>
+                <option value="RJ">Rajasthan</option>
+                <option value="SK">Sikkim</option>
+                <option value="TN">Tamil Nadu</option>
+                <option value="TG">Telangana</option>
+                <option value="TR">Tripura</option>
+                <option value="UP">Uttar Pradesh</option>
+                <option value="UT">Uttarakhand</option>
+                <option value="WB">West Bengal</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="pincode" class="mono">PINCODE</label>
+              <input type="text" id="pincode" name="pincode" required autocomplete="postal-code" placeholder="110001" maxlength="6" pattern="\d{6}" inputmode="numeric" />
+            </div>
+            <div class="form-group">
+              <label for="country" class="mono">COUNTRY</label>
+              <input type="text" id="country" name="country" value="India" readonly autocomplete="country" />
+            </div>
+          </div>
+        </section>
+
+        <section class="checkout-section" aria-labelledby="payment-heading">
+          <h2 id="payment-heading" class="checkout-section-title mono">PAYMENT METHOD</h2>
+          <fieldset class="pay-options">
+            <legend class="sr-only">Payment Method</legend>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="UPI" checked />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>UPI</strong><small class="mono">GPay / PhonePe / Paytm / BHIM — Instant</small></span>
+              <span class="mono pay-badge">₹0 FEE</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="CARD" />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>CARD</strong><small class="mono">Visa / Mastercard / RuPay / Amex — 3D Secure</small></span>
+              <span class="mono pay-badge">₹0 FEE</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payment" value="COD" />
+              <span class="pay-radio"></span>
+              <span class="pay-label"><strong>CASH ON DELIVERY</strong><small class="mono">Pay when your order arrives</small></span>
+              <span class="mono pay-badge">+₹49</span>
+            </label>
+          </fieldset>
+
+          <!-- UPI input (shown when UPI selected) -->
+          <div class="pay-details" id="upi-details">
+            <div class="form-group">
+              <label for="upi-id" class="mono">UPI ID</label>
+              <input type="text" id="upi-id" name="upiId" placeholder="yourname@upi" autocomplete="off" />
+            </div>
+            <p class="mono pay-hint">We'll send a collect request to your UPI app. Approve to complete payment.</p>
+          </div>
+
+          <!-- Card input (shown when Card selected) -->
+          <div class="pay-details" id="card-details" hidden>
+            <div class="form-group">
+              <label for="card-number" class="mono">CARD NUMBER</label>
+              <input type="text" id="card-number" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" autocomplete="cc-number" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="card-expiry" class="mono">EXPIRY</label>
+                <input type="text" id="card-expiry" name="cardExpiry" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp" />
+              </div>
+              <div class="form-group">
+                <label for="card-cvv" class="mono">CVV</label>
+                <input type="text" id="card-cvv" name="cardCvv" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="cc-csc" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="card-name" class="mono">NAME ON CARD</label>
+              <input type="text" id="card-name" name="cardName" autocomplete="cc-name" placeholder="As it appears on card" />
+            </div>
+            <p class="mono pay-hint">Secured by 3D Secure 2.0. Your card details are never stored.</p>
+          </div>
+
+          <!-- COD notice -->
+          <div class="pay-details" id="cod-details" hidden>
+            <p class="mono pay-hint">₹49 handling fee applies. Pay in cash or UPI to delivery partner. Available for orders under ₹50,000.</p>
+          </div>
+        </section>
+
+        <button class="btn-solid full checkout-place-order" type="submit" id="place-order-btn">
+          <span>PLACE ORDER</span>
+          <span class="mono" id="pay-total">₹0</span>
+        </button>
+
+        <p class="mono checkout-note">By placing this order you agree to our 30-day exchange policy. Demo storefront — no payment is captured.</p>
+      </form>
+
+      <!-- Right: Order Summary (Sticky) -->
+      <aside class="checkout-summary-panel" aria-labelledby="summary-heading">
+        <h2 id="summary-heading" class="checkout-section-title mono">ORDER SUMMARY</h2>
+        <div class="checkout-items" id="checkout-items"></div>
+        <div class="checkout-totals" id="checkout-totals"></div>
+      </aside>
+    </div>
+
+    <!-- Success State (hidden initially) -->
+    <section class="checkout-success" id="checkout-success" hidden aria-labelledby="success-heading">
+      <div class="success-mark">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <span class="eyebrow mono">ORDER CONFIRMED</span>
+      <h2 id="success-heading">YOU'RE IN.</h2>
+      <p id="success-copy">Order TJF-000000 is locked. A confirmation is on its way to your inbox.</p>
+      <div class="success-meta mono">
+        <div><span>PAID VIA</span><strong id="success-payment">UPI</strong></div>
+        <div><span>TOTAL</span><strong id="success-total">₹0</strong></div>
+        <div><span>ETA</span><strong>3–5 BUSINESS DAYS</strong></div>
+      </div>
+      <a href="index.html" class="btn-solid full">CONTINUE SHOPPING</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-marquee" aria-hidden="true">
+      <div class="footer-marquee-track">
+        <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+        <span>THE JEANS FACTORY — THE JEANS FACTORY — THE JEANS FACTORY —&nbsp;</span>
+      </div>
+    </div>
+    <div class="footer-bottom mono">
+      <span>© 2026 THE JEANS FACTORY</span>
+      <span>MADE WITH HEAVY DENIM & LIGHTER DAYS</span>
+      <span>INR ₹ / INDIA</span>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Inline Checkout Script -->
+  <script>
+    (() => {
+      'use strict';
+
+      const $ = (sel, ctx = document) => ctx.querySelector(sel);
+      const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+      const money = (n) => '₹' + Number(n).toLocaleString('en-IN');
+      const CART_KEY = 'tjf-cart-v1';
+      const SHIPPING_THRESHOLD = 2499;
+      let toastTimer = null;
+
+      function toast(message) {
+        const el = $('#toast');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.add('is-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('is-visible'), 3200);
+      }
+
+      function loadCart() {
+        try {
+          const raw = localStorage.getItem(CART_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return [];
+          return parsed.filter((it) => it && it.id && it.name && Number(it.price) >= 0 && Number(it.qty) > 0)
+            .map((it) => ({ ...it, qty: Math.max(1, Math.floor(it.qty)), price: Number(it.price) }));
+        } catch { return []; }
+      }
+
+      function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {} }
+
+      function cartSubtotal() { return cart.reduce((sum, it) => sum + it.price * it.qty, 0); }
+      function cartShipping() { const sub = cartSubtotal(); if (sub === 0) return 0; return sub >= SHIPPING_THRESHOLD ? 0 : 99; }
+      function cartCODFee(method) { return method === 'COD' ? 49 : 0; }
+      function cartTotal(method) { return cartSubtotal() + cartShipping() + cartCODFee(method); }
+
+      let cart = loadCart();
+
+      function renderSummary() {
+        const itemsEl = $('#checkout-items');
+        const totalsEl = $('#checkout-totals');
+        const payTotalEl = $('#pay-total');
+        const method = $('input[name="payment"]:checked')?.value || 'UPI';
+
+        if (!itemsEl || !totalsEl) return;
+
+        if (!cart.length) {
+          itemsEl.innerHTML = '<p class="mono" style="text-align:center; padding: 2rem;">YOUR BAG IS EMPTY</p>';
+          totalsEl.innerHTML = '';
+          if (payTotalEl) payTotalEl.textContent = '₹0';
+          return;
+        }
+
+        itemsEl.innerHTML = cart.map((it) => `
+          <div class="checkout-item">
+            <div class="checkout-item-img img-ph"><img src="${it.image}" alt="${it.name}" loading="lazy" /></div>
+            <div class="checkout-item-info">
+              <h4>${it.name}</h4>
+              <p class="mono">${it.fit} / SIZE ${it.size}</p>
+              <span class="checkout-item-qty mono">Qty: ${it.qty}</span>
+            </div>
+            <span class="checkout-item-price mono">${money(it.price * it.qty)}</span>
+          </div>
+        `).join('');
+
+        const sub = cartSubtotal();
+        const ship = cartShipping();
+        const fee = cartCODFee(method);
+        const total = cartTotal(method);
+
+        totalsEl.innerHTML = `
+          <div class="summary-line"><span>SUBTOTAL</span><strong>${money(sub)}</strong></div>
+          <div class="summary-line"><span>SHIPPING</span><strong class="${ship === 0 ? 'free' : ''}">${ship === 0 ? 'FREE' : money(ship)}</strong></div>
+          <div class="summary-line"><span>${method === 'COD' ? 'COD HANDLING' : 'PAYMENT FEE'}</span><strong>${fee === 0 ? '₹0' : money(fee)}</strong></div>
+          <div class="summary-line is-total"><span>TOTAL</span><strong>${money(total)}</strong></div>
+        `;
+        if (payTotalEl) payTotalEl.textContent = money(total);
+        const countEl = $('#cart-count');
+        if (countEl) countEl.textContent = String(cart.reduce((s, it) => s + it.qty, 0));
+      }
+
+      function updatePaymentDetails() {
+        const method = $('input[name="payment"]:checked')?.value || 'UPI';
+        $('#upi-details').hidden = method !== 'UPI';
+        $('#card-details').hidden = method !== 'CARD';
+        $('#cod-details').hidden = method !== 'COD';
+        renderSummary();
+      }
+
+      function validateForm() {
+        const required = $$('#checkout-form [required]');
+        let valid = true;
+        required.forEach((el) => {
+          if (!el.value.trim()) {
+            el.style.borderColor = 'var(--orange)';
+            valid = false;
+          } else {
+            el.style.borderColor = '';
+          }
+        });
+        // Validate pincode
+        const pin = $('#pincode');
+        if (pin && (!pin.value.trim() || !/^\d{6}$/.test(pin.value.trim()))) {
+          pin.style.borderColor = 'var(--orange)';
+          valid = false;
+        }
+        // Validate email
+        const email = $('#email');
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+          email.style.borderColor = 'var(--orange)';
+          valid = false;
+        }
+        // Validate phone
+        const phone = $('#phone');
+        if (phone && !/^\+?91?\s?[6-9]\d{9}$/.test(phone.value.replace(/\s/g, ''))) {
+          phone.style.borderColor = 'var(--orange)';
+          valid = false;
+        }
+        return valid;
+      }
+
+      function placeOrder(e) {
+        e.preventDefault();
+        if (!validateForm()) {
+          toast('PLEASE FILL ALL REQUIRED FIELDS CORRECTLY');
+          return;
+        }
+        if (!cart.length) {
+          toast('YOUR BAG IS EMPTY');
+          return;
+        }
+
+        const method = $('input[name="payment"]:checked')?.value || 'UPI';
+        const total = cartTotal(method);
+        const orderId = 'TJF-' + String(Math.floor(100000 + Math.random() * 900000));
+        const methodLabel = method === 'COD' ? 'CASH ON DELIVERY' : method;
+
+        $('#success-copy').textContent = `Order ${orderId} is locked. A confirmation is on its way to your inbox.`;
+        $('#success-payment').textContent = methodLabel;
+        $('#success-total').textContent = money(total);
+
+        $('#checkout-form').hidden = true;
+        $('#checkout-success').hidden = false;
+        $('.checkout-progress').style.display = 'none';
+
+        // Clear cart
+        cart = [];
+        saveCart();
+        $('#cart-count').textContent = '0';
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Init
+      function boot() {
+        if (!cart.length) {
+          window.location.href = 'index.html#drops';
+          return;
+        }
+
+        renderSummary();
+        updatePaymentDetails();
+
+        $$('input[name="payment"]').forEach((radio) => {
+          radio.addEventListener('change', updatePaymentDetails);
+        });
+
+        $('#checkout-form')?.addEventListener('submit', placeOrder);
+
+        // Input styling reset on input
+        $$('#checkout-form input, #checkout-form select').forEach((el) => {
+          el.addEventListener('input', () => { el.style.borderColor = ''; });
+        });
+
+        // Format card number
+        const cardNum = $('#card-number');
+        if (cardNum) {
+          cardNum.addEventListener('input', () => {
+            let v = cardNum.value.replace(/\D/g, '');
+            v = v.replace(/(\d{4})/g, '$1 ').trim();
+            cardNum.value = v.substring(0, 19);
+          });
+        }
+        // Format card expiry
+        const cardExp = $('#card-expiry');
+        if (cardExp) {
+          cardExp.addEventListener('input', () => {
+            let v = cardExp.value.replace(/\D/g, '');
+            if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+            cardExp.value = v.substring(0,5);
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot, { once: true });
+      } else {
+        boot();
+      }
+    })();
+  </script>
+</body>
+</html>
