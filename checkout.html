@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body class="checkout-page">
 
@@ -132,12 +132,22 @@
             <div class="form-group">
               <label for="pincode" class="mono">PINCODE</label>
               <input type="text" id="pincode" name="pincode" required autocomplete="postal-code" placeholder="110001" maxlength="6" pattern="\d{6}" inputmode="numeric" />
+              <span id="delivery-estimate" class="checkout-feedback" role="status"></span>
             </div>
             <div class="form-group">
               <label for="country" class="mono">COUNTRY</label>
               <input type="text" id="country" name="country" value="India" readonly autocomplete="country" />
             </div>
           </div>
+        </section>
+
+        <section class="checkout-section" aria-labelledby="coupon-heading">
+          <h2 id="coupon-heading" class="checkout-section-title mono">COUPON CODE</h2>
+          <div class="coupon-entry">
+            <input type="text" id="coupon-code" autocomplete="off" placeholder="TJF300 or FIRSTDROP" aria-label="Coupon code" />
+            <button type="button" class="btn-outline" id="apply-coupon">APPLY</button>
+          </div>
+          <span id="coupon-feedback" class="checkout-feedback" role="status"></span>
         </section>
 
         <section class="checkout-section" aria-labelledby="payment-heading">
@@ -232,6 +242,7 @@
         <div><span>ETA</span><strong>3–5 BUSINESS DAYS</strong></div>
       </div>
       <a href="index.html" class="btn-solid full">CONTINUE SHOPPING</a>
+      <a id="success-track-link" class="track-order-success" href="track.html">TRACK THIS ORDER →</a>
     </section>
   </main>
 
@@ -247,6 +258,7 @@
       <span>© 2026 THE JEANS FACTORY</span>
       <span>MADE WITH HEAVY DENIM & LIGHTER DAYS</span>
       <span>INR ₹ / INDIA</span>
+      <a href="track.html">TRACK ORDER</a>
     </div>
   </footer>
 
@@ -254,209 +266,8 @@
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Inline Checkout Script -->
-  <script>
-    (() => {
-      'use strict';
-
-      const $ = (sel, ctx = document) => ctx.querySelector(sel);
-      const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-      const money = (n) => '₹' + Number(n).toLocaleString('en-IN');
-      const CART_KEY = 'tjf-cart-v1';
-      const SHIPPING_THRESHOLD = 2499;
-      let toastTimer = null;
-
-      function toast(message) {
-        const el = $('#toast');
-        if (!el) return;
-        el.textContent = message;
-        el.classList.add('is-visible');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => el.classList.remove('is-visible'), 3200);
-      }
-
-      function loadCart() {
-        try {
-          const raw = localStorage.getItem(CART_KEY);
-          if (!raw) return [];
-          const parsed = JSON.parse(raw);
-          if (!Array.isArray(parsed)) return [];
-          return parsed.filter((it) => it && it.id && it.name && Number(it.price) >= 0 && Number(it.qty) > 0)
-            .map((it) => ({ ...it, qty: Math.max(1, Math.floor(it.qty)), price: Number(it.price) }));
-        } catch { return []; }
-      }
-
-      function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {} }
-
-      function cartSubtotal() { return cart.reduce((sum, it) => sum + it.price * it.qty, 0); }
-      function cartShipping() { const sub = cartSubtotal(); if (sub === 0) return 0; return sub >= SHIPPING_THRESHOLD ? 0 : 99; }
-      function cartCODFee(method) { return method === 'COD' ? 49 : 0; }
-      function cartTotal(method) { return cartSubtotal() + cartShipping() + cartCODFee(method); }
-
-      let cart = loadCart();
-
-      function renderSummary() {
-        const itemsEl = $('#checkout-items');
-        const totalsEl = $('#checkout-totals');
-        const payTotalEl = $('#pay-total');
-        const method = $('input[name="payment"]:checked')?.value || 'UPI';
-
-        if (!itemsEl || !totalsEl) return;
-
-        if (!cart.length) {
-          itemsEl.innerHTML = '<p class="mono" style="text-align:center; padding: 2rem;">YOUR BAG IS EMPTY</p>';
-          totalsEl.innerHTML = '';
-          if (payTotalEl) payTotalEl.textContent = '₹0';
-          return;
-        }
-
-        itemsEl.innerHTML = cart.map((it) => `
-          <div class="checkout-item">
-            <div class="checkout-item-img img-ph"><img src="${it.image}" alt="${it.name}" loading="lazy" /></div>
-            <div class="checkout-item-info">
-              <h4>${it.name}</h4>
-              <p class="mono">${it.fit} / SIZE ${it.size}</p>
-              <span class="checkout-item-qty mono">Qty: ${it.qty}</span>
-            </div>
-            <span class="checkout-item-price mono">${money(it.price * it.qty)}</span>
-          </div>
-        `).join('');
-
-        const sub = cartSubtotal();
-        const ship = cartShipping();
-        const fee = cartCODFee(method);
-        const total = cartTotal(method);
-
-        totalsEl.innerHTML = `
-          <div class="summary-line"><span>SUBTOTAL</span><strong>${money(sub)}</strong></div>
-          <div class="summary-line"><span>SHIPPING</span><strong class="${ship === 0 ? 'free' : ''}">${ship === 0 ? 'FREE' : money(ship)}</strong></div>
-          <div class="summary-line"><span>${method === 'COD' ? 'COD HANDLING' : 'PAYMENT FEE'}</span><strong>${fee === 0 ? '₹0' : money(fee)}</strong></div>
-          <div class="summary-line is-total"><span>TOTAL</span><strong>${money(total)}</strong></div>
-        `;
-        if (payTotalEl) payTotalEl.textContent = money(total);
-        const countEl = $('#cart-count');
-        if (countEl) countEl.textContent = String(cart.reduce((s, it) => s + it.qty, 0));
-      }
-
-      function updatePaymentDetails() {
-        const method = $('input[name="payment"]:checked')?.value || 'UPI';
-        $('#upi-details').hidden = method !== 'UPI';
-        $('#card-details').hidden = method !== 'CARD';
-        $('#cod-details').hidden = method !== 'COD';
-        renderSummary();
-      }
-
-      function validateForm() {
-        const required = $$('#checkout-form [required]');
-        let valid = true;
-        required.forEach((el) => {
-          if (!el.value.trim()) {
-            el.style.borderColor = 'var(--orange)';
-            valid = false;
-          } else {
-            el.style.borderColor = '';
-          }
-        });
-        // Validate pincode
-        const pin = $('#pincode');
-        if (pin && (!pin.value.trim() || !/^\d{6}$/.test(pin.value.trim()))) {
-          pin.style.borderColor = 'var(--orange)';
-          valid = false;
-        }
-        // Validate email
-        const email = $('#email');
-        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-          email.style.borderColor = 'var(--orange)';
-          valid = false;
-        }
-        // Validate phone
-        const phone = $('#phone');
-        if (phone && !/^\+?91?\s?[6-9]\d{9}$/.test(phone.value.replace(/\s/g, ''))) {
-          phone.style.borderColor = 'var(--orange)';
-          valid = false;
-        }
-        return valid;
-      }
-
-      function placeOrder(e) {
-        e.preventDefault();
-        if (!validateForm()) {
-          toast('PLEASE FILL ALL REQUIRED FIELDS CORRECTLY');
-          return;
-        }
-        if (!cart.length) {
-          toast('YOUR BAG IS EMPTY');
-          return;
-        }
-
-        const method = $('input[name="payment"]:checked')?.value || 'UPI';
-        const total = cartTotal(method);
-        const orderId = 'TJF-' + String(Math.floor(100000 + Math.random() * 900000));
-        const methodLabel = method === 'COD' ? 'CASH ON DELIVERY' : method;
-
-        $('#success-copy').textContent = `Order ${orderId} is locked. A confirmation is on its way to your inbox.`;
-        $('#success-payment').textContent = methodLabel;
-        $('#success-total').textContent = money(total);
-
-        $('#checkout-form').hidden = true;
-        $('#checkout-success').hidden = false;
-        $('.checkout-progress').style.display = 'none';
-
-        // Clear cart
-        cart = [];
-        saveCart();
-        $('#cart-count').textContent = '0';
-
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      // Init
-      function boot() {
-        if (!cart.length) {
-          window.location.href = 'index.html#drops';
-          return;
-        }
-
-        renderSummary();
-        updatePaymentDetails();
-
-        $$('input[name="payment"]').forEach((radio) => {
-          radio.addEventListener('change', updatePaymentDetails);
-        });
-
-        $('#checkout-form')?.addEventListener('submit', placeOrder);
-
-        // Input styling reset on input
-        $$('#checkout-form input, #checkout-form select').forEach((el) => {
-          el.addEventListener('input', () => { el.style.borderColor = ''; });
-        });
-
-        // Format card number
-        const cardNum = $('#card-number');
-        if (cardNum) {
-          cardNum.addEventListener('input', () => {
-            let v = cardNum.value.replace(/\D/g, '');
-            v = v.replace(/(\d{4})/g, '$1 ').trim();
-            cardNum.value = v.substring(0, 19);
-          });
-        }
-        // Format card expiry
-        const cardExp = $('#card-expiry');
-        if (cardExp) {
-          cardExp.addEventListener('input', () => {
-            let v = cardExp.value.replace(/\D/g, '');
-            if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
-            cardExp.value = v.substring(0,5);
-          });
-        }
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', boot, { once: true });
-      } else {
-        boot();
-      }
-    })();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-client.js" defer></script>
+  <script src="checkout.js" defer></script>
 </body>
 </html>

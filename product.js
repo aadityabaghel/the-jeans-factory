@@ -497,6 +497,19 @@
     renderSizeGuideTable();
   }
 
+  function applyLiveStock(rows) {
+    if (!product) return;
+    const normalize = (v) => String(v ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const row = rows.find((item) => [item.id, item.slug, item.handle, item.product_id, item.name, item.title]
+      .some((value) => normalize(value) === normalize(product.id) || normalize(value) === normalize(product.name)));
+    if (!row) return;
+    product.stock = Object.fromEntries(SIZES.map((size) => [size, Math.max(0, Number(row[`stock_${size}`]) || 0)]));
+    product.soldOut = SIZES.filter((size) => product.stock[size] === 0);
+    if (product.stock[selectedSize] === 0) selectedSize = SIZES.find((size) => product.stock[size] > 0) || SIZES[0];
+    renderSizePills();
+    renderMeasurementTable(product);
+  }
+
   function renderThumbnails(p) {
     const thumbs = $('#pdp-thumbs');
     if (!thumbs) return;
@@ -556,10 +569,16 @@
   function renderSizePills() {
     const wrap = $('#pdp-size-pills');
     if (!wrap || !product) return;
-    const sold = new Set(product.soldOut || []);
+    const sold = new Set(product.stock ? SIZES.filter((s) => product.stock[s] === 0) : (product.soldOut || []));
     wrap.innerHTML = SIZES.map((s) => `
       <button class="pdp-size-pill ${s === selectedSize ? 'is-active' : ''}" data-size="${s}" ${sold.has(s) ? 'disabled aria-disabled="true"' : ''} aria-label="Select waist size ${s}">${s}</button>
     `).join('');
+    const warning = $('#pdp-stock-warning');
+    const stock = product.stock?.[selectedSize];
+    if (warning) {
+      warning.hidden = stock == null || stock === 0 || stock > 5;
+      warning.textContent = warning.hidden ? '' : `ONLY ${stock} LEFT`;
+    }
   }
 
   function renderLengthPills() {
@@ -1007,6 +1026,7 @@
       if (!btn || btn.disabled) return;
       selectedSize = Number(btn.dataset.size);
       $$('.pdp-size-pill').forEach((b) => b.classList.toggle('is-active', Number(b.dataset.size) === selectedSize));
+      renderSizePills();
       renderMeasurementTable(product);
     });
 
@@ -1217,6 +1237,7 @@
     }
 
     renderProduct(p);
+    if (window.TJFInventory?.rows?.length) applyLiveStock(window.TJFInventory.rows);
     bindEvents();
     initSmoothScroll();
     renderCart();
@@ -1226,6 +1247,9 @@
       ScrollTrigger.refresh();
     }
   }
+
+  window.addEventListener('tjf:inventory', (event) => applyLiveStock(event.detail || []));
+  if (window.TJFInventory?.rows?.length) applyLiveStock(window.TJFInventory.rows);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once: true });

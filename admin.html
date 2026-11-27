@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#141414" />
+  <title>Admin Console — THE JEANS FACTORY</title>
+  <link rel="stylesheet" href="styles.css?v=10" />
+</head>
+<body class="cloud-page admin-page">
+  <header class="cloud-header"><a href="index.html" class="wordmark"><span class="wordmark-main">THE JEANS</span><span class="wordmark-sub mono">FACTORY®</span></a><span class="mono">INTERNAL / ADMIN</span></header>
+  <main class="cloud-main admin-main">
+    <p class="mono cloud-kicker">OPERATIONS / AUTHENTICATED ACCESS</p>
+    <h1>CONTROL<br /><span>ROOM.</span></h1>
+    <form id="admin-login" class="cloud-form">
+      <label class="mono" for="admin-email">ADMIN EMAIL</label><input id="admin-email" type="email" autocomplete="username" required />
+      <label class="mono" for="admin-password">PASSWORD</label><input id="admin-password" type="password" autocomplete="current-password" required />
+      <button class="btn-solid" type="submit">SIGN IN</button><p id="admin-message" class="cloud-message" role="status"></p>
+    </form>
+    <section id="admin-console" hidden>
+      <div class="admin-toolbar"><p class="mono">LIVE ORDERS &amp; INVENTORY</p><button class="btn-outline" id="admin-signout" type="button">SIGN OUT</button></div>
+      <div id="admin-orders" class="admin-panel"></div>
+      <div class="admin-panel"><h2>PRODUCT SIZE STOCK</h2><div id="admin-products"></div></div>
+    </section>
+  </main>
+  <footer class="cloud-footer mono"><a href="track.html">TRACK ORDER</a><span>THE JEANS FACTORY</span></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-client.js" defer></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>

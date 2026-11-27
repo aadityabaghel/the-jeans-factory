@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#141414" />
+  <title>Track Order — THE JEANS FACTORY</title>
+  <link rel="stylesheet" href="styles.css?v=10" />
+</head>
+<body class="cloud-page">
+  <header class="cloud-header"><a href="index.html" class="wordmark"><span class="wordmark-main">THE JEANS</span><span class="wordmark-sub mono">FACTORY®</span></a><a href="index.html#drops">SHOP THE DROP ↗</a></header>
+  <main class="cloud-main">
+    <p class="mono cloud-kicker">ORDER INTELLIGENCE / 01</p>
+    <h1>TRACK YOUR<br /><span>ORDER.</span></h1>
+    <p class="cloud-intro">Enter the tracking code from your confirmation and the phone number used at checkout.</p>
+    <form id="track-form" class="cloud-form">
+      <label class="mono" for="track-code">TJF TRACKING CODE</label>
+      <input id="track-code" name="code" required pattern="TJF-\d{6}" placeholder="TJF-123456" autocomplete="off" />
+      <label class="mono" for="track-phone">PHONE NUMBER</label>
+      <input id="track-phone" name="phone" type="tel" required placeholder="+91 9876543210" autocomplete="tel" />
+      <button class="btn-solid" type="submit">FIND MY ORDER</button>
+      <p class="cloud-message" id="track-message" role="status" aria-live="polite"></p>
+    </form>
+    <section id="track-result" class="track-result" hidden aria-live="polite"></section>
+  </main>
+  <footer class="cloud-footer mono"><a href="index.html">THE JEANS FACTORY</a><span>BUILT TO OUTLIVE THE TREND.</span></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-client.js" defer></script>
+  <script src="track.js" defer></script>
+</body>
+</html>

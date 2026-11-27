@@ -19,6 +19,7 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const money = (n) => '₹' + Number(n).toLocaleString('en-IN');
   const pad2 = (n) => String(n).padStart(2, '0');
+  const SIZES_STOCK = [28, 30, 32, 34, 36];
   const unsplash = (id, w = 1100) =>
     `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 
@@ -557,6 +558,9 @@
     const swatches = d.swatches && d.swatches.length ? d.swatches : [{ name: d.wash, color: '#1B2A4A', image: d.image }];
     const visibleSwatches = swatches.slice(0, 3);
     const extraCount = swatches.length - visibleSwatches.length;
+    const liveProduct = window.TJFInventory?.row(d.id, d.name);
+    const available = liveProduct ? SIZES_STOCK.map((size) => Number(liveProduct[`stock_${size}`]) || 0).filter((n) => n > 0) : [];
+    const lowStock = available.length && Math.min(...available) <= 5 ? Math.min(...available) : null;
 
     return `
       <article class="drop-card collection-card" data-fit="${d.fit}" data-id="${d.id}" data-wash="${d.wash}" data-rise="${d.rise}" data-distress="${d.distress}" data-price="${d.price}">
@@ -564,6 +568,7 @@
           <a class="drop-media-link" href="product.html?id=${d.id}" aria-label="View ${d.name} details">
             <img class="drop-img drop-img-model" src="${d.image}" alt="${d.name} flat-lay in ${d.wash.toLowerCase()} denim" loading="lazy" decoding="async" />
           </a>
+          ${lowStock !== null ? `<span class="inventory-low-badge">ONLY ${lowStock} LEFT</span>` : ''}
         </div>
 
         <div class="card-swatches" role="group" aria-label="Available washes for ${d.name}">
@@ -2079,7 +2084,8 @@
   }
 
   function renderProductSizes(product) {
-    const sold = new Set(product.soldOut || []);
+    const sold = new Set(SIZES_STOCK.filter((size) => product.stock?.[size] === 0));
+    if (!product.stock) (product.soldOut || []).forEach((size) => sold.add(size));
     const summary = $('#pd-sizes');
     if (summary) {
       summary.innerHTML = SIZES.map((s) => `
@@ -2094,8 +2100,29 @@
           data-pd-size="${s}" ${sold.has(s) ? 'disabled aria-disabled="true"' : ''}
           aria-label="Select size ${s}">${s}</button>`).join('');
     }
+    const selectedStock = product.stock?.[productState.size];
+    const warning = $('#pd-stock-warning');
+    if (warning) {
+      warning.hidden = selectedStock == null || selectedStock > 5 || selectedStock === 0;
+      warning.textContent = warning.hidden ? '' : `ONLY ${selectedStock} LEFT`;
+    }
     const sizeReadout = $('#pd-size-readout');
     if (sizeReadout) sizeReadout.textContent = `SIZE W${productState.size}`;
+  }
+
+  function applyLiveInventory(rows) {
+    CATALOG.forEach((product) => {
+      const row = rows.find((item) => [item.id, item.slug, item.handle, item.product_id, item.name, item.title]
+        .some((value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '') === String(product.id).toLowerCase().replace(/[^a-z0-9]/g, '') || (value && String(value).toLowerCase() === String(product.name).toLowerCase())));
+      if (!row) return;
+      product.stock = Object.fromEntries(SIZES_STOCK.map((size) => [size, Math.max(0, Number(row[`stock_${size}`]) || 0)]));
+      product.soldOut = SIZES_STOCK.filter((size) => product.stock[size] === 0);
+    });
+    renderRunway(runwayItems);
+    if (productState.product) {
+      if (productState.product.stock?.[productState.size] === 0) productState.size = SIZES_STOCK.find((size) => productState.product.stock[size] > 0) || SIZES_STOCK[0];
+      renderProductSizes(productState.product);
+    }
   }
 
   function renderMeasureTable(product) {
@@ -2215,19 +2242,7 @@
       closeCheckout();
       return;
     }
-    const method = $('input[name="payment"]:checked')?.value || 'UPI';
-    const total = checkoutSummary(method);
-    const orderId = 'TJF-' + String(Math.floor(100000 + Math.random() * 900000));
-    const methodLabel = method === 'COD' ? 'CASH ON DELIVERY' : method;
-
-    $('#success-copy').textContent = `Order ${orderId} is locked. A confirmation is on its way to your inbox.`;
-    $('#success-payment').textContent = methodLabel;
-    $('#success-total').textContent = money(total);
-    $('#checkout-body').hidden = true;
-    $('#checkout-success').hidden = false;
-
-    cart = [];
-    renderCart();
+    window.location.href = 'checkout.html';
   }
 
   /* ---------- 8. Chrome ---------- */
@@ -2699,6 +2714,9 @@
       setTimeout(() => ScrollTrigger.refresh(), 400);
     }
   }
+
+  window.addEventListener('tjf:inventory', (event) => applyLiveInventory(event.detail || []));
+  if (window.TJFInventory?.rows?.length) applyLiveInventory(window.TJFInventory.rows);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once: true });

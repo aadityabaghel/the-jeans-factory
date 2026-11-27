@@ -4072,6 +4072,70 @@ input[type='range']:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   .checkout-page .pay-badge { display: none; }
 }
 
+/* Supabase inventory and customer operations */
+.inventory-low-badge { display: inline-flex; align-items: center; width: fit-content; padding: 6px 9px; border-radius: 2px; background: #EA580C; color: #fff; font: 700 0.56rem/1 var(--font-mono); letter-spacing: 0.08em; }
+.inventory-low-badge[hidden] { display: none; }
+.drop-media { position: relative; }
+.drop-media > .inventory-low-badge { position: absolute; z-index: 2; left: 10px; bottom: 10px; }
+.checkout-feedback { display: block; min-height: 1em; margin-top: 6px; color: #EA580C; font: 0.55rem/1.5 var(--font-mono); }
+.coupon-entry { display: flex; gap: 8px; }
+.coupon-entry input { flex: 1; min-width: 0; }
+.coupon-entry .btn-outline { padding: 0.8rem 1rem; }
+.track-order-success { display: block; margin: 18px auto 0; color: #EA580C; font: 700 0.65rem var(--font-mono); letter-spacing: 0.1em; text-align: center; }
+
+.cloud-page { min-height: 100vh; background: #141414; color: #f5f5f0; }
+.cloud-header, .cloud-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 22px clamp(20px, 5vw, 72px); border-bottom: 1px solid rgba(245,245,240,.12); }
+.cloud-header > a:last-child, .cloud-footer a { color: #EA580C; font: 700 0.62rem var(--font-mono); letter-spacing: .1em; }
+.cloud-main { width: min(720px, calc(100% - 40px)); margin: clamp(52px, 9vw, 120px) auto; }
+.cloud-kicker { color: #EA580C; font-size: .65rem; letter-spacing: .16em; }
+.cloud-main h1 { margin: 18px 0; font: 400 clamp(3.8rem, 11vw, 8rem)/.86 var(--font-display); letter-spacing: -.03em; }
+.cloud-main h1 span { color: #EA580C; }
+.cloud-intro { max-width: 48ch; color: rgba(245,245,240,.68); line-height: 1.6; }
+.cloud-form { display: grid; gap: 10px; max-width: 460px; margin-top: 38px; }
+.cloud-form label { margin-top: 12px; color: rgba(245,245,240,.7); font-size: .62rem; letter-spacing: .1em; }
+.cloud-form input, .admin-stock-row input, .admin-order select { min-width: 0; padding: 14px; border: 1px solid rgba(245,245,240,.18); border-radius: 4px; background: #1c1c1c; color: #f5f5f0; font: .85rem var(--font-mono); }
+.cloud-form .btn-solid { margin-top: 10px; }
+.cloud-message { min-height: 1.3em; color: #EA580C; font: .65rem/1.5 var(--font-mono); }
+.track-result, .admin-panel { margin-top: 36px; padding: clamp(18px, 4vw, 32px); border: 1px solid rgba(245,245,240,.14); background: #191919; }
+.track-order-head, .admin-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+.track-order-head h2 { margin: 8px 0 0; font: 700 clamp(1.4rem, 4vw, 2.5rem) var(--font-mono); }
+.status-chip { padding: 8px 10px; border: 1px solid #EA580C; color: #EA580C; font: 700 .58rem var(--font-mono); }
+.status-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; list-style: none; padding: 30px 0; }
+.status-timeline li { display: grid; gap: 10px; color: rgba(245,245,240,.35); font-size: .55rem; }
+.status-timeline li.is-done { color: #f5f5f0; }
+.timeline-dot { width: 13px; height: 13px; border: 1px solid rgba(245,245,240,.35); border-radius: 50%; }
+.is-done .timeline-dot { border-color: #EA580C; background: #EA580C; box-shadow: 0 0 14px rgba(234,88,12,.4); }
+.track-items { border-top: 1px solid rgba(245,245,240,.12); padding-top: 20px; }
+.track-items h3, .admin-panel h2 { font: 700 .7rem var(--font-mono); letter-spacing: .1em; }
+.track-item { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(245,245,240,.08); font-size: .8rem; }
+.track-payment { color: rgba(245,245,240,.5); font-size: .58rem; }
+.cloud-footer { border-top: 1px solid rgba(245,245,240,.12); border-bottom: 0; color: rgba(245,245,240,.45); font-size: .58rem; letter-spacing: .1em; }
+.admin-main { width: min(1100px, calc(100% - 40px)); }
+.admin-toolbar { margin: 44px 0 14px; }
+.admin-toolbar p { color: #EA580C; font: .65rem var(--font-mono); letter-spacing: .1em; }
+.admin-order { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(245,245,240,.1); }
+.admin-order-meta { display: grid; gap: 6px; color: rgba(245,245,240,.62); font-size: .72rem; }
+.admin-order-meta strong { color: #EA580C; font: 700 .75rem var(--font-mono); }
+.admin-order-selects { display: flex; gap: 12px; }
+.admin-order-selects label, .stock-fields label { display: grid; gap: 6px; color: rgba(245,245,240,.52); font-size: .52rem; }
+.admin-order select { padding: 9px; font-size: .65rem; }
+.admin-stock-row { display: flex; align-items: center; gap: 18px; padding: 16px 0; border-bottom: 1px solid rgba(245,245,240,.1); }
+.admin-stock-row > strong { min-width: 180px; font-size: .8rem; }
+.stock-fields { display: flex; gap: 8px; flex: 1; }
+.admin-stock-row input { width: 62px; padding: 8px; font-size: .65rem; }
+.admin-stock-row .btn-outline { padding: 10px; white-space: nowrap; }
+.cloud-error { color: #ff8a50; font: .7rem/1.5 var(--font-mono); }
+@media (max-width: 680px) {
+  .cloud-header, .cloud-footer { padding: 18px 20px; }
+  .cloud-main { margin: 54px auto; }
+  .status-timeline { gap: 3px; }
+  .status-timeline li { font-size: .45rem; }
+  .admin-order { grid-template-columns: 1fr; }
+  .admin-stock-row { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .stock-fields { width: 100%; justify-content: space-between; }
+  .admin-stock-row input { width: 52px; }
+}
+
 
 /* Pure-white studio image boxes for Chapter 04 product artwork. */
 .fit-carousel-frame,
