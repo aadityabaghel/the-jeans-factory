@@ -205,6 +205,15 @@
         $('#success-track-link').href = `track.html?code=${encodeURIComponent(orderId)}`;
         $('#success-payment').textContent = methodLabel;
         $('#success-total').textContent = money(Number(savedOrder?.total_amount ?? savedOrder?.total ?? total));
+        const receiptOrder = {
+          ...(savedOrder && typeof savedOrder === 'object' ? savedOrder : {}),
+          tracking_code: orderId, items, first_name: customer.first_name, last_name: customer.last_name,
+          phone: customer.phone, email: customer.email, address: customer.address1, address2: customer.address2,
+          city: customer.city, state: customer.state, pincode: customer.pincode, country: 'India',
+          subtotal: cartSubtotal(), discount_amount: couponDiscount(), coupon_code: appliedCoupon?.code || null,
+          total_amount: Number(savedOrder?.total_amount ?? savedOrder?.total ?? total), order_status: 'CONFIRMED',
+        };
+        window.TJFOrderActions?.render(receiptOrder, $('#checkout-order-actions'));
 
         $('#checkout-form').hidden = true;
         $('#checkout-success').hidden = false;

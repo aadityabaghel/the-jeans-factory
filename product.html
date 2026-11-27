@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=13" />
+  <link rel="stylesheet" href="styles.css?v=14" />
 </head>
 <body class="pdp-page">
 
@@ -125,6 +125,13 @@
             <div class="pdp-size-pills" id="pdp-size-pills" role="group" aria-label="Waist sizes"></div>
           </div>
           <span id="pdp-stock-warning" class="inventory-low-badge" hidden></span>
+          <form id="pdp-restock-form" class="tjf-restock-box" hidden>
+            <strong class="mono">SIZE SOLD OUT — NOTIFY ME ON RESTOCK</strong>
+            <small class="mono">Select a sold-out waist size above, then enter your contact.</small>
+            <input id="pdp-restock-contact" name="contact" required placeholder="WhatsApp number or email" aria-label="WhatsApp number or email" />
+            <button type="submit" class="btn-outline">NOTIFY ME</button>
+            <span id="pdp-restock-message" class="mono" role="status" aria-live="polite"></span>
+          </form>
           <div class="pdp-size-row">
             <span class="mono pdp-size-label">LENGTH</span>
             <div class="pdp-length-pills" id="pdp-length-pills" role="group" aria-label="Length options"></div>
@@ -233,9 +240,10 @@
     <!-- Reviews Section -->
     <section class="pdp-reviews" aria-labelledby="pdp-reviews-title">
       <header class="pdp-reviews-head">
-        <h2 id="pdp-reviews-title">CUSTOMER REVIEWS & FIT RATING</h2>
+        <h2 id="pdp-reviews-title">VERIFIED BUYER REVIEWS &amp; FIT METER</h2>
         <div class="pdp-overall-rating">
-          <span class="pdp-big-rating" id="pdp-big-rating">4.8</span>
+          <span class="mono tjf-rating-star" aria-hidden="true">★</span>
+          <span class="pdp-big-rating" id="pdp-big-rating">—</span>
           <span class="mono">/ 5.0</span>
           <div class="pdp-rating-bar">
             <div class="pdp-rating-bar-fill" id="pdp-rating-bar-fill" style="width: 96%"></div>
@@ -245,23 +253,27 @@
       </header>
 
       <!-- Write a Review Form -->
-      <form class="pdp-review-form" id="pdp-review-form" aria-label="Write a review">
+      <form class="pdp-review-form" id="pdp-review-form" aria-label="Write a verified review">
         <div class="pdp-review-form-head">
-          <span class="mono">WRITE A REVIEW</span>
-          <span class="mono pdp-form-note">Your review helps others find their perfect fit.</span>
+          <span class="mono">WRITE A VERIFIED REVIEW</span>
+          <span class="mono pdp-form-note">Order code verification is required to submit.</span>
         </div>
         <div class="pdp-review-form-grid">
+          <div class="pdp-form-group pdp-full-width">
+            <label for="pdp-review-order" class="mono">ORDER CODE</label>
+            <input type="text" id="pdp-review-order" name="order_code" required pattern="TJF-\d{6}" placeholder="TJF-123456" />
+          </div>
           <div class="pdp-form-group">
             <label for="pdp-review-name" class="mono">NAME</label>
             <input type="text" id="pdp-review-name" name="name" required placeholder="Your name" />
           </div>
           <div class="pdp-form-group">
-            <label for="pdp-review-height" class="mono">HEIGHT</label>
-            <input type="text" id="pdp-review-height" name="height" placeholder="e.g., 5'10\" or 178 cm" />
+            <label for="pdp-review-size" class="mono">SIZE PURCHASED</label>
+            <select id="pdp-review-size" name="size" required><option value="">Select size</option><option>28</option><option>30</option><option>32</option><option>34</option><option>36</option></select>
           </div>
           <div class="pdp-form-group">
-            <label for="pdp-review-size" class="mono">SIZE PURCHASED</label>
-            <input type="text" id="pdp-review-size" name="size" placeholder="e.g., W32 / L32" />
+            <label for="pdp-review-fit" class="mono">FIT EXPERIENCE</label>
+            <select id="pdp-review-fit" name="fit" required><option>True to Size</option><option>Runs Small</option><option>Runs Large</option></select>
           </div>
           <div class="pdp-form-group">
             <label class="mono">RATING</label>
@@ -275,12 +287,8 @@
             </fieldset>
           </div>
           <div class="pdp-form-group pdp-full-width">
-            <label for="pdp-review-title" class="mono">REVIEW TITLE</label>
-            <input type="text" id="pdp-review-title" name="title" required placeholder="Summarize your experience" />
-          </div>
-          <div class="pdp-form-group pdp-full-width">
-            <label for="pdp-review-body" class="mono">YOUR REVIEW</label>
-            <textarea id="pdp-review-body" name="body" rows="4" required placeholder="Tell us about the fit, quality, and how they wear..."></textarea>
+            <label for="pdp-review-body" class="mono">REVIEW COMMENT</label>
+            <textarea id="pdp-review-body" name="comment" rows="4" required placeholder="Tell us about the fit, quality, and how they wear..."></textarea>
           </div>
         </div>
         <button class="btn-solid" type="submit"><span>SUBMIT REVIEW</span></button>
@@ -306,6 +314,7 @@
 
       <!-- Review Cards -->
       <div class="pdp-reviews-list" id="pdp-reviews-list" role="list" aria-label="Customer reviews"></div>
+      <p class="mono" id="pdp-review-message" role="status" aria-live="polite"></p>
     </section>
 
     <!-- Related Products -->
@@ -431,13 +440,15 @@
 
   <!-- Toast -->
   <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+  <button type="button" class="tjf-whatsapp-float" data-whatsapp-support aria-label="WhatsApp support">☏ <span>WHATSAPP SUPPORT</span></button>
 
   <!-- Libraries via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="supabase-client.js?v=13" defer></script>
-  <script src="product.js?v=13" defer></script>
+  <script src="supabase-client.js?v=14" defer></script>
+  <script src="order-actions.js?v=14" defer></script>
+  <script src="product.js?v=14" defer></script>
 </body>
 </html>

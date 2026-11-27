@@ -11,6 +11,8 @@
   let orders = [];
   let products = [];
   let coupons = [];
+  let reviews = [];
+  let restockAlerts = [];
   let editingProductId = null;
   let selectedFiles = [];
   let imageUrls = [];
@@ -66,7 +68,48 @@
     if (error) { $('#admin-coupons').innerHTML = `<p class="admin-empty">${esc(error.message)}</p>`; return; }
     coupons = data || []; renderCoupons();
   }
-  async function loadWorkspace() { if (canManage()) await Promise.all([loadOrders(), loadProducts(), loadCoupons()]); }
+  async function loadReviews() {
+    if (!canManage()) return;
+    const { data, error } = await window.sb.from('reviews').select('*').order('created_at', { ascending: false });
+    if (error) { $('#admin-reviews').innerHTML = `<p class="admin-empty">${esc(error.message)}</p>`; return; }
+    reviews = data || []; renderReviews();
+  }
+  async function loadRestockAlerts() {
+    if (!canManage()) return;
+    const { data, error } = await window.sb.from('restock_alerts').select('*').order('created_at', { ascending: false });
+    if (error) { $('#admin-restock-demand').innerHTML = `<p class="admin-empty">${esc(error.message)}</p>`; return; }
+    restockAlerts = data || []; renderRestockAlerts();
+  }
+  async function loadStoreSettings() {
+    if (!canManage()) return;
+    await window.TJFSettings?.refresh();
+    const values = window.TJFSettings?.values || {};
+    const form = $('#store-settings-form'); if (!form) return;
+    let drop = values.drop_countdown || {};
+    if (typeof drop === 'string') { try { drop = JSON.parse(drop); } catch { drop = { label: drop }; } }
+    form.elements.drop_label.value = drop.label || '';
+    const date = drop.ends_at || drop.date || drop.target_date;
+    if (date && Number.isFinite(new Date(date).getTime())) form.elements.drop_date.value = new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    form.elements.drop_enabled.checked = drop.enabled !== false;
+    const phone = values.whatsapp_support;
+    form.elements.whatsapp_support.value = typeof phone === 'object' ? (phone.number || phone.phone || '') : (phone || '');
+  }
+  async function loadWorkspace() { if (canManage()) await Promise.all([loadOrders(), loadProducts(), loadCoupons(), loadReviews(), loadRestockAlerts(), loadStoreSettings()]); }
+
+  function renderReviews() {
+    const host = $('#admin-reviews'); if (!host) return;
+    host.innerHTML = reviews.length ? reviews.map((review) => `<article class="tjf-moderation-row"><div><strong>${esc(review.name || review.customer_name || 'Customer')} · ${'★'.repeat(Math.min(5, Number(review.rating) || 0))}</strong><p>${esc(review.comment || review.body || review.review || '')}</p><small class="mono">${esc(review.product_name || review.product_id || 'Product')} · W${esc(review.size_bought || review.size || '—')} · ${esc(review.order_code || '')} · ${review.is_verified ? 'VERIFIED' : 'UNVERIFIED'} · ${review.is_approved ? 'PUBLISHED' : 'PENDING'}</small></div><button type="button" class="admin-secondary-button" data-delete-review="${esc(review.id)}">DELETE</button></article>`).join('') : '<p class="admin-empty">NO REVIEWS TO MODERATE.</p>';
+  }
+  function renderRestockAlerts() {
+    const host = $('#admin-restock-demand'); if (!host) return;
+    const grouped = new Map();
+    restockAlerts.filter((item) => String(item.status || 'pending').toLowerCase() !== 'notified').forEach((item) => {
+      const key = `${item.product_id || item.product_name}::${item.size}`;
+      if (!grouped.has(key)) grouped.set(key, { product: item.product_name || item.product_id || 'Product', size: item.size, requests: [] });
+      grouped.get(key).requests.push(item);
+    });
+    host.innerHTML = grouped.size ? Array.from(grouped.values()).sort((a, b) => b.requests.length - a.requests.length).map((group) => `<section class="tjf-demand-group"><header><div><h2>${esc(group.product)} · W${esc(group.size)}</h2><span class="mono">${group.requests.length} CUSTOMER${group.requests.length === 1 ? '' : 'S'} WAITING</span></div></header>${group.requests.map((request) => { const contact = String(request.contact || request.phone || request.email || ''); const digits = contact.replace(/\D/g, ''); const wa = digits.length >= 10 ? `https://wa.me/${digits.startsWith('91') ? digits : `91${digits}`}?text=${encodeURIComponent(`Hi, ${group.product} in W${group.size} is back in stock at THE JEANS FACTORY.`)}` : ''; return `<div class="tjf-demand-contact"><span>${esc(contact)} <small class="mono">${esc(request.contact_type || '')}</small></span><div>${wa ? `<a class="admin-secondary-button" href="${esc(wa)}" target="_blank" rel="noopener">WHATSAPP CUSTOMER ↗</a>` : ''}<button type="button" class="admin-quiet-button" data-notify-restock="${esc(request.id)}">MARK NOTIFIED</button><button type="button" class="admin-quiet-button is-danger" data-delete-restock="${esc(request.id)}">DELETE</button></div></div>`; }).join('')}</section>`).join('') : '<p class="admin-empty">NO OPEN RESTOCK REQUESTS.</p>';
+  }
 
   function renderProducts() {
     const query = filters.productQuery.toLowerCase();
@@ -131,7 +174,7 @@
     if (name === 'editor') return;
     $$('.admin-view').forEach((view) => { view.hidden = view.dataset.view !== name; });
     $$('.admin-nav-item[data-workspace]').forEach((button) => button.classList.toggle('is-active', button.dataset.workspace === name));
-    const title = { overview: 'Overview', products: 'Products', orders: 'Orders', coupons: 'Coupons' }[name] || 'Products';
+    const title = { overview: 'Overview', products: 'Products', orders: 'Orders', coupons: 'Coupons', reviews: 'Reviews', restock: 'Restock Demand' }[name] || 'Products';
     $('#admin-breadcrumb-current').textContent = title;
     document.body.classList.remove('admin-sidebar-open');
     $('#admin-sidebar-scrim').hidden = true;
@@ -294,6 +337,8 @@
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => loadOrders())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => loadProducts())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'coupons' }, () => loadCoupons())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => loadReviews())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'restock_alerts' }, () => loadRestockAlerts())
       .subscribe();
   }
   async function showConsole(user) {
@@ -323,7 +368,7 @@
   $('#admin-nav')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-workspace]'); if (button) setWorkspace(button.dataset.workspace);
   });
-  $$('[data-workspace="overview"], [data-workspace="products"], [data-workspace="orders"], [data-workspace="coupons"]').forEach((button) => button.addEventListener('click', () => setWorkspace(button.dataset.workspace)));
+  $$('[data-workspace]').forEach((button) => button.addEventListener('click', () => setWorkspace(button.dataset.workspace)));
   $('#admin-mobile-menu')?.addEventListener('click', () => { document.body.classList.add('admin-sidebar-open'); $('#admin-sidebar-scrim').hidden = false; });
   $('#admin-sidebar-scrim')?.addEventListener('click', () => { document.body.classList.remove('admin-sidebar-open'); $('#admin-sidebar-scrim').hidden = true; });
   $('#open-product-editor')?.addEventListener('click', openNewProductEditor);
@@ -379,6 +424,37 @@
     }
   });
   $('#admin-orders')?.addEventListener('click', (event) => { const button = event.target.closest('[data-order-detail]'); if (button) showOrderDetail(button.dataset.orderDetail); });
+  $('#store-settings-form')?.addEventListener('submit', async (event) => {
+    event.preventDefault(); if (!canManage()) return;
+    const form = event.currentTarget; const date = form.elements.drop_date.value ? new Date(form.elements.drop_date.value).toISOString() : null;
+    const values = [
+      { key: 'drop_countdown', value: { label: form.elements.drop_label.value.trim(), ends_at: date, enabled: form.elements.drop_enabled.checked } },
+      { key: 'whatsapp_support', value: form.elements.whatsapp_support.value.replace(/\D/g, '') || '919876543210' },
+    ];
+    const { error } = await window.sb.from('store_settings').upsert(values, { onConflict: 'key' });
+    const message = $('#store-settings-message');
+    if (error) { message.textContent = `SAVE FAILED · ${error.message}`; notify('SETTINGS SAVE FAILED', true); return; }
+    values.forEach((item) => { window.TJFSettings.values[item.key] = item.value; });
+    window.dispatchEvent(new CustomEvent('tjf:settings', { detail: window.TJFSettings.values }));
+    message.textContent = 'SETTINGS UPDATED ON STOREFRONT.'; notify('STOREFRONT SETTINGS SAVED');
+  });
+  $('#admin-reviews')?.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-delete-review]'); if (!button || !canManage()) return;
+    button.disabled = true; const { error } = await window.sb.from('reviews').delete().eq('id', button.dataset.deleteReview);
+    if (error) { button.disabled = false; notify(`REVIEW DELETE FAILED · ${error.message}`, true); return; }
+    reviews = reviews.filter((review) => String(review.id) !== button.dataset.deleteReview); renderReviews(); notify('REVIEW REMOVED');
+  });
+  $('#admin-restock-demand')?.addEventListener('click', async (event) => {
+    const notified = event.target.closest('[data-notify-restock]'); const remove = event.target.closest('[data-delete-restock]');
+    if ((!notified && !remove) || !canManage()) return;
+    const id = notified?.dataset.notifyRestock || remove.dataset.deleteRestock; const button = notified || remove; button.disabled = true;
+    const query = notified ? window.sb.from('restock_alerts').update({ status: 'notified' }).eq('id', id) : window.sb.from('restock_alerts').delete().eq('id', id);
+    const { error } = await query;
+    if (error) { button.disabled = false; notify(`RESTOCK UPDATE FAILED · ${error.message}`, true); return; }
+    if (notified) { const row = restockAlerts.find((item) => String(item.id) === id); if (row) row.status = 'notified'; }
+    else restockAlerts = restockAlerts.filter((item) => String(item.id) !== id);
+    renderRestockAlerts(); notify(notified ? 'CUSTOMER MARKED AS NOTIFIED' : 'RESTOCK REQUEST DELETED');
+  });
   $('#admin-orders')?.addEventListener('change', async (event) => {
     const select = event.target.closest('[data-order-field]'); if (!select || !canManage()) return;
     const row = select.closest('[data-order-id]'); select.disabled = true;

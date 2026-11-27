@@ -33,6 +33,9 @@
       <div class="track-items"><h3 class="mono">YOUR ITEMS</h3>${items.length ? items.map((item) => `<div class="track-item"><span>${esc(item.name || item.product_name || item.title || 'Denim item')} · W${esc(item.size || item.waist || '')} × ${esc(item.quantity || item.qty || 1)}</span><strong>${item.unit_price || item.price ? '₹' + Number(item.unit_price || item.price).toLocaleString('en-IN') : ''}</strong></div>`).join('') : '<p class="mono">Item breakdown is not available for this order.</p>'}</div>
       <p class="mono track-payment">PAYMENT · ${esc(String(order.payment_status || 'PENDING').toUpperCase())}</p>`;
     result.hidden = false;
+    window.TJFOrderActions?.render(order, result.querySelector('#track-order-actions') || (() => {
+      const host = document.createElement('div'); host.id = 'track-order-actions'; host.className = 'tjf-order-actions'; result.appendChild(host); return host;
+    })());
   }
 
   form?.addEventListener('submit', (event) => {

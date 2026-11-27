@@ -471,6 +471,7 @@
     selectedLength = 32;
     currentView = 'model';
     currentSwatch = 'charcoal';
+    window.TJFCurrentProduct = { name: p.name, size: selectedSize };
 
     // Update breadcrumb
     const fitObj = FITS.find((f) => f.name === p.fit);
@@ -525,7 +526,7 @@
     renderAdditionalDetails(p);
 
     // Reviews
-    renderReviews(p);
+    loadVerifiedReviews(p);
 
     // Related products
     renderRelated(p);
@@ -548,6 +549,7 @@
     product.soldOut = SIZES.filter((size) => product.stock[size] === 0);
     if (product.stock[selectedSize] === 0) selectedSize = SIZES.find((size) => product.stock[size] > 0) || SIZES[0];
     renderSizePills();
+    window.TJFCurrentProduct = { name: product.name, size: selectedSize };
     renderMeasurementTable(product);
   }
 
@@ -612,7 +614,7 @@
     if (!wrap || !product) return;
     const sold = new Set(product.stock ? SIZES.filter((s) => product.stock[s] === 0) : (product.soldOut || []));
     wrap.innerHTML = SIZES.map((s) => `
-      <button class="pdp-size-pill ${s === selectedSize ? 'is-active' : ''}" data-size="${s}" ${sold.has(s) ? 'disabled aria-disabled="true"' : ''} aria-label="Select waist size ${s}">${s}</button>
+      <button class="pdp-size-pill ${s === selectedSize ? 'is-active' : ''} ${sold.has(s) ? 'is-sold-out' : ''}" data-size="${s}" aria-label="Select waist size ${s}${sold.has(s) ? ', sold out' : ''}">${s}</button>
     `).join('');
     const warning = $('#pdp-stock-warning');
     const stock = product.stock?.[selectedSize];
@@ -624,6 +626,9 @@
       const soldOut = SIZES.every((size) => product.stock[size] === 0);
       ['#pdp-add-bag', '#pdp-buy-now'].forEach((selector) => { const button = $(selector); if (button) button.disabled = soldOut; });
     }
+    const restock = $('#pdp-restock-form');
+    if (restock) restock.hidden = !product.stock || !SIZES.some((size) => product.stock[size] === 0);
+    window.TJFCurrentProduct = { name: product.name, size: selectedSize };
   }
 
   function renderLengthPills() {
@@ -768,120 +773,88 @@
       </tbody>`;
   }
 
-  /* ---------- 7. Reviews ---------- */
-  function getReviewKey(id) { return REVIEW_KEY_PREFIX + id; }
-
-  function loadReviews(id) {
-    try {
-      const raw = localStorage.getItem(getReviewKey(id));
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch { return []; }
+  /* ---------- 7. Verified buyer reviews ---------- */
+  let verifiedReviews = [];
+  async function loadVerifiedReviews(p) {
+    const host = $('#pdp-reviews-list');
+    if (!host) return;
+    if (!window.sb) { renderReviews(p, []); return; }
+    const productId = p._cloudProductId || p.id;
+    const { data, error } = await window.sb.from('reviews').select('*').eq('product_id', productId).order('created_at', { ascending: false });
+    if (error) { console.warn('Verified reviews unavailable:', error.message); renderReviews(p, []); return; }
+    verifiedReviews = (data || []).filter((r) => r.is_verified === true && r.is_approved !== false && String(r.status || 'approved').toLowerCase() !== 'pending');
+    renderReviews(p, verifiedReviews);
   }
 
-  function saveReviews(id, reviews) {
-    try { localStorage.setItem(getReviewKey(id), JSON.stringify(reviews)); } catch {}
-  }
-
-  function getAllReviews(id) {
-    const stored = loadReviews(id);
-    return [...SEED_REVIEWS, ...stored];
-  }
-
-  function renderReviews(p) {
-    const reviews = getAllReviews(p.id);
+  function renderReviews(p, reviews = verifiedReviews) {
     const list = $('#pdp-reviews-list');
     if (!list) return;
-
-    // Overall rating
-    const total = reviews.length;
-    const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / total;
-    $('#pdp-big-rating').textContent = avg.toFixed(1);
-    $('#pdp-rating-bar-fill').style.width = `${(avg / 5) * 100}%`;
-    $('#pdp-total-reviews').textContent = `${total} review${total !== 1 ? 's' : ''}`;
-
-    // Fit scale
-    renderFitScale(p.id, reviews);
-
-    // Review cards
-    list.innerHTML = reviews.map((r) => `
+    const normalized = reviews.map((r) => ({
+      name: r.name || r.customer_name || 'Verified customer', rating: Number(r.rating) || 5,
+      comment: r.comment || r.body || r.review || '', fit: r.fit_experience || r.fit || 'True to Size',
+      size: r.size_bought || r.size || '—', date: r.created_at || r.date,
+    }));
+    const total = normalized.length;
+    const avg = total ? normalized.reduce((sum, r) => sum + r.rating, 0) / total : 0;
+    $('#pdp-big-rating').textContent = total ? avg.toFixed(1) : '—';
+    $('#pdp-rating-bar-fill').style.width = total ? `${(avg / 5) * 100}%` : '0%';
+    $('#pdp-total-reviews').textContent = `${total.toLocaleString('en-IN')} verified review${total === 1 ? '' : 's'}`;
+    const summaryValue = $('#pdp-rating-value'); if (summaryValue) summaryValue.textContent = total ? avg.toFixed(1) : '—';
+    const summaryCount = $('#pdp-review-count'); if (summaryCount) summaryCount.textContent = `(${total.toLocaleString('en-IN')})`;
+    renderFitScale(p.id, normalized);
+    list.innerHTML = normalized.length ? normalized.map((r) => `
       <article class="pdp-review-card" role="listitem">
-        <header class="pdp-review-head">
-          <div class="pdp-review-meta">
-            <strong>${r.name}</strong>
-            <span class="mono">${r.verified ? '✓ Verified Buyer' : ''}</span>
-          </div>
-          <div class="pdp-review-rating" aria-label="${r.rating} out of 5 stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-        </header>
-        <h3 class="pdp-review-title">${r.title}</h3>
-        <p class="pdp-review-body">${r.body}</p>
-        <footer class="pdp-review-foot mono">
-          <span class="pdp-review-fit">${r.fit}</span>
-          <span>•</span>
-          <span>${r.height}</span>
-          <span>•</span>
-          <span>${r.size}</span>
-          <span>•</span>
-          <span>${new Date(r.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-        </footer>
-      </article>
-    `).join('');
+        <header class="pdp-review-head"><div class="pdp-review-meta"><strong>${escapeHTML(r.name)}</strong><span class="mono verified-review-badge">VERIFIED BUYER ✓</span></div><div class="pdp-review-rating" aria-label="${r.rating} out of 5 stars">${'★'.repeat(Math.min(5, r.rating))}${'☆'.repeat(Math.max(0, 5 - r.rating))}</div></header>
+        <p class="pdp-review-body">${escapeHTML(r.comment)}</p>
+        <footer class="pdp-review-foot mono"><span class="pdp-review-fit">${escapeHTML(r.fit)}</span><span>•</span><span>W${escapeHTML(r.size)}</span><span>•</span><span>${r.date ? new Date(r.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</span></footer>
+      </article>`).join('') : '<p class="mono pdp-reviews-empty">No verified reviews yet. Purchased this fit? Share your experience below.</p>';
   }
 
   function renderFitScale(productId, reviews) {
-    // Calculate fit distribution from reviews
     let small = 0, trueFit = 0, large = 0;
-    reviews.forEach((r) => {
-      const f = r.fit.toLowerCase();
-      if (f.includes('small')) small++;
-      else if (f.includes('large')) large++;
-      else trueFit++;
-    });
+    reviews.forEach((r) => { const fit = String(r.fit || '').toLowerCase(); if (fit.includes('small')) small++; else if (fit.includes('large')) large++; else trueFit++; });
     const total = reviews.length || 1;
-    const smallPct = Math.round((small / total) * 100);
-    const truePct = Math.round((trueFit / total) * 100);
-    const largePct = Math.round((large / total) * 100);
-
-    $('#pdp-fit-small').style.width = `${smallPct}%`;
-    $('#pdp-fit-true').style.width = `${truePct}%`;
-    $('#pdp-fit-large').style.width = `${largePct}%`;
-
-    // Position marker at center of true-to-size segment
-    const markerLeft = smallPct + truePct / 2;
-    $('#pdp-fit-scale-marker').style.left = `${markerLeft}%`;
+    const smallPct = Math.round((small / total) * 100), truePct = Math.round((trueFit / total) * 100), largePct = Math.max(0, 100 - smallPct - truePct);
+    $('#pdp-fit-small').style.width = `${smallPct}%`; $('#pdp-fit-true').style.width = `${truePct}%`; $('#pdp-fit-large').style.width = `${largePct}%`;
+    $('#pdp-fit-scale-marker').style.left = `${smallPct + truePct / 2}%`;
+    const labels = $('#pdp-fit-scale')?.querySelector('.pdp-fit-scale-legend');
+    if (labels) labels.innerHTML = `<span>RUNS SMALL ${smallPct}%</span><span>TRUE TO SIZE ${truePct}%</span><span>RUNS LARGE ${largePct}%</span>`;
   }
 
-  function submitReview(e) {
+  async function submitReview(e) {
     e.preventDefault();
-    if (!product) return;
+    if (!product || !window.sb) { $('#pdp-review-message').textContent = 'Review service is unavailable. Please try again.'; return; }
     const form = e.target;
-    const name = $('#pdp-review-name').value.trim();
-    const height = $('#pdp-review-height').value.trim();
-    const size = $('#pdp-review-size').value.trim();
-    const rating = Number(form.rating.value);
-    const title = $('#pdp-review-title').value.trim();
-    const body = $('#pdp-review-body').value.trim();
-    if (!name || !rating || !title || !body) return;
+    const orderCode = form.elements.order_code.value.trim().toUpperCase();
+    const name = form.elements.name.value.trim(); const size = Number(form.elements.size.value);
+    const rating = Number(form.elements.namedItem('rating')?.value); const fit = form.elements.namedItem('fit').value; const comment = form.elements.namedItem('comment').value.trim();
+    if (!/^TJF-\d{6}$/.test(orderCode) || !name || !size || !rating || !comment) return;
+    const submit = form.querySelector('[type="submit"]'); if (submit) submit.disabled = true;
+    const { error } = await window.sb.rpc('submit_verified_review', {
+      p_order_code: orderCode, p_product_id: product._cloudProductId || product.id,
+      p_name: name, p_size: size, p_rating: rating, p_fit_experience: fit, p_comment: comment,
+    });
+    if (submit) submit.disabled = false;
+    const message = $('#pdp-review-message');
+    if (error) { message.textContent = `Could not submit review: ${error.message}`; return; }
+    form.reset(); message.textContent = 'ORDER CODE RECEIVED — YOUR PURCHASE WILL BE VERIFIED BEFORE THE REVIEW APPEARS.';
+  }
 
-    // Determine fit label from rating
-    let fitLabel = 'True to Size';
-    if (rating <= 2) fitLabel = 'Runs Small';
-    else if (rating >= 4) fitLabel = 'Runs Large';
-
-    const newReview = {
-      name, rating, title, body, fit: fitLabel,
-      height: height || '—', size: size || '—',
-      date: new Date().toISOString().split('T')[0], verified: true,
-    };
-
-    const stored = loadReviews(product.id);
-    stored.unshift(newReview);
-    saveReviews(product.id, stored);
-
-    form.reset();
-    renderReviews(product);
-    toast('REVIEW SUBMITTED — THANK YOU!');
+  async function submitRestockAlert(event) {
+    event.preventDefault();
+    const input = $('#pdp-restock-contact'); const message = $('#pdp-restock-message');
+    const contact = input.value.trim();
+    if (!product || !window.sb) { message.textContent = 'Restock alerts are unavailable right now.'; return; }
+    if (product.stock?.[selectedSize] !== 0) { message.textContent = 'Select a sold-out waist size above first.'; return; }
+    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+    const digits = contact.replace(/\D/g, '');
+    if (!email && digits.length < 10) { message.textContent = 'Enter a valid email or WhatsApp number.'; return; }
+    const { error } = await window.sb.from('restock_alerts').insert({
+      product_id: product._cloudProductId || window.TJFInventory?.databaseId(product.id, product.name) || product.id,
+      product_name: product.name, size: selectedSize, contact, contact_type: email ? 'email' : 'whatsapp', status: 'pending',
+    });
+    if (error) { message.textContent = `Could not save alert: ${error.message}`; return; }
+    event.target.reset(); message.textContent = `YOU’RE ON THE LIST — WE’LL ALERT YOU WHEN W${selectedSize} RETURNS.`;
   }
 
   /* ---------- 8. Related Products ---------- */
@@ -1068,11 +1041,12 @@
     // Size pills
     $('#pdp-size-pills')?.addEventListener('click', (e) => {
       const btn = e.target.closest('.pdp-size-pill');
-      if (!btn || btn.disabled) return;
+      if (!btn) return;
       selectedSize = Number(btn.dataset.size);
       $$('.pdp-size-pill').forEach((b) => b.classList.toggle('is-active', Number(b.dataset.size) === selectedSize));
       renderSizePills();
       renderMeasurementTable(product);
+      window.TJFCurrentProduct = { name: product.name, size: selectedSize };
     });
 
     // Length pills
@@ -1179,6 +1153,7 @@
 
     // Review form
     $('#pdp-review-form')?.addEventListener('submit', submitReview);
+    $('#pdp-restock-form')?.addEventListener('submit', submitRestockAlert);
 
     // Smooth scroll for anchor links
     document.addEventListener('click', (e) => {
