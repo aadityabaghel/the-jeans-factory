@@ -279,19 +279,26 @@
   CATALOG.set(CROSS_SELL.id, { ...CROSS_SELL, type: 'cross' });
 
   function syncCloudCatalog(rows) {
+    const normalize = (value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    rows.filter((row) => row.is_active !== true).forEach((row) => {
+      const match = Array.from(CATALOG.values()).find((item) => item.type === 'drop' &&
+        (item._cloudProductId === String(row.id ?? row.product_id ?? row.slug ?? '') || normalize(item.id) === normalize(row.slug) || normalize(item.name) === normalize(row.name)));
+      if (match) for (const [key, value] of CATALOG) if (value === match) CATALOG.delete(key);
+    });
     rows.forEach((row) => {
-      if (row.is_active === false || row.is_active === 0 || row.active === false || row.active === 0 || ['inactive', 'draft', 'archived'].includes(String(row.status || '').toLowerCase())) return;
+      if (row.is_active !== true) return;
       const id = String(row.id ?? row.product_id ?? row.slug ?? '');
       if (!id) return;
       const image = row.image_url || row.image || row.gallery_urls?.[0] || '';
       const stock = Object.fromEntries(SIZES.map((size) => [size, Math.max(0, Number(row[`stock_${size}`]) || 0)]));
       const rawFit = String(row.fit || row.fit_category || 'Wide');
       const fit = ({ Wide: 'Wide-Leg', 'Wide Leg': 'Wide-Leg' })[rawFit] || rawFit;
-      const existing = CATALOG.get(id) || Array.from(CATALOG.values()).find((item) => item._cloudProductId === id);
+      const existing = CATALOG.get(id) || Array.from(CATALOG.values()).find((item) => item.type === 'drop' && (item._cloudProductId === id || normalize(item.name) === normalize(row.name)));
       const product = {
         ...(existing || {}), id: existing?.id || id, _cloudProductId: id,
         name: row.name || row.title || 'Untitled Denim', fit,
-        price: Number(row.price) || 0, gsm: `${Number(row.gsm ?? row.fabric_weight_gsm) || 450} GSM`,
+        price: Number(row.price) || 0, sale_price: row.sale_price == null ? null : Number(row.sale_price),
+        mrp: row.mrp == null ? null : Number(row.mrp), gsm: `${Number(row.gsm ?? row.fabric_weight_gsm) || 450} GSM`,
         wash: row.wash || row.wash_type || 'RAW INDIGO', rise: row.rise || 'High',
         distress: row.distress || 'None', stretch: Number(row.stretch) || 0,
         badge: row.badge || '', image, imageFlat: row.gallery_urls?.[0] || image,
@@ -302,6 +309,10 @@
       CATALOG.set(String(product.id), product);
       CATALOG.set(id, product);
     });
+    const activeIds = new Set(rows.filter((row) => row.is_active === true).map((row) => String(row.id ?? row.product_id ?? row.slug ?? '')));
+    for (const [key, item] of CATALOG) {
+      if (item.type === 'drop' && (!item._cloudProductId || !activeIds.has(item._cloudProductId))) CATALOG.delete(key);
+    }
   }
 
   const SHIPPING_THRESHOLD = 2499;
@@ -312,6 +323,7 @@
   /* ---------- 3. State ---------- */
   let product = null;
   let pageInitialized = false;
+  let pageBooted = false;
   let selectedSize = 32;
   let selectedLength = 32;
   let currentView = 'model';
@@ -474,10 +486,11 @@
     $('#pdp-review-count').textContent = '(2,418)';
 
     // Price
-    const mrp = Math.round(p.price * 1.6 / 100) * 100;
-    const discount = Math.round((1 - p.price / mrp) * 100);
+    const compareAt = Number(p.sale_price ?? p.mrp ?? (p._cloudProductId ? 0 : Math.round(p.price * 1.6 / 100) * 100));
+    const discount = compareAt > p.price ? Math.round((1 - p.price / compareAt) * 100) : 0;
     $('#pdp-price').textContent = money(p.price);
-    $('#pdp-mrp').textContent = money(mrp);
+    $('#pdp-mrp').textContent = compareAt > 0 && compareAt !== Number(p.price) ? money(compareAt) : '';
+    $('#pdp-mrp').hidden = !(compareAt > 0 && compareAt !== Number(p.price));
     $('#pdp-discount-badge').textContent = `${discount}% OFF`;
     $('#pdp-discount-badge').style.display = discount > 0 ? 'inline-block' : 'none';
 
@@ -1255,15 +1268,17 @@
   }
 
   /* ---------- 13. Boot ---------- */
-  function boot() {
+  async function boot() {
     const id = getProductIdFromUrl();
     if (!id) {
       // Redirect to homepage if no product ID
       window.location.href = 'index.html';
       return;
     }
-    if (window.TJFInventory?.rows?.length) syncCloudCatalog(window.TJFInventory.rows);
-    if (!mountProduct(id) && !window.TJFInventory?.rows?.length) {
+    if (window.TJFInventory?.ready) { try { await window.TJFInventory.ready; } catch {} }
+    if (window.TJFInventory?.loaded) syncCloudCatalog(window.TJFInventory.rows);
+    pageBooted = true;
+    if (!mountProduct(id) && !window.TJFInventory?.loaded) {
       const wait = document.createElement('p');
       wait.className = 'pdp-cloud-loading mono';
       wait.textContent = 'LOADING LIVE PRODUCT…';
@@ -1291,12 +1306,16 @@
   window.addEventListener('tjf:inventory', (event) => {
     const rows = event.detail || [];
     syncCloudCatalog(rows);
-    if (!pageInitialized) {
+    if (pageBooted && !pageInitialized) {
       const id = getProductIdFromUrl();
       if (!mountProduct(id)) window.location.href = 'index.html#drops';
-    } else applyLiveStock(rows);
+    } else if (pageInitialized) {
+      const productIsPublished = rows.some((row) => row.is_active === true && [row.id, row.product_id, row.slug, row.name, row.title].some((value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '') === String(product._cloudProductId || product.id).toLowerCase().replace(/[^a-z0-9]/g, '') || String(value ?? '').toLowerCase() === String(product.name).toLowerCase()));
+      if (!productIsPublished) window.location.href = 'index.html#drops';
+      else applyLiveStock(rows);
+    }
   });
-  if (window.TJFInventory?.rows?.length) {
+  if (window.TJFInventory?.loaded) {
     syncCloudCatalog(window.TJFInventory.rows);
     if (product) applyLiveStock(window.TJFInventory.rows);
   }

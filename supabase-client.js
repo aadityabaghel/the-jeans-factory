@@ -17,11 +17,15 @@
   window.TJFInventory = {
     sizes,
     rows: [],
+    loaded: false,
+    error: null,
     async refresh() {
       if (!window.sb) return this.rows;
       const { data, error } = await window.sb.from('products').select('*');
       if (error) throw error;
       this.rows = data || [];
+      this.loaded = true;
+      this.error = null;
       window.dispatchEvent(new CustomEvent('tjf:inventory', { detail: this.rows }));
       return this.rows;
     },
@@ -36,13 +40,14 @@
     },
     async subscribe() {
       if (!window.sb) return;
+      const initial = this.refresh().catch((error) => { this.error = error; console.warn('Live inventory unavailable:', error.message); return this.rows; });
       window.sb.channel('tjf-products-stock')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
           this.refresh().catch((error) => console.warn('Inventory refresh failed:', error.message));
-        }).subscribe((status) => {
-          if (status === 'SUBSCRIBED') this.refresh().catch((error) => console.warn('Live inventory unavailable:', error.message));
-        });
+        }).subscribe((status) => { if (status === 'SUBSCRIBED' && this.loaded) this.refresh().catch((error) => console.warn('Inventory refresh failed:', error.message)); });
+      await initial;
+      return this.rows;
     },
   };
-  window.TJFInventory.subscribe();
+  window.TJFInventory.ready = window.TJFInventory.subscribe();
 })();

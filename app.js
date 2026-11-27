@@ -504,6 +504,7 @@
 
   /* ---------- 3. Rendering ---------- */
   let runwayItems = DROPS.slice();
+  let inventoryInitialized = !window.TJFInventory;
 
   function renderFitCarousel() {
     const track = $('#fit-carousel-track');
@@ -558,8 +559,9 @@
     const wash = escapeHTML(d.wash || 'RAW INDIGO');
     const productId = encodeURIComponent(String(d.id));
     const image = escapeHTML(d.image || '');
-    const mrp = d.mrp || Math.round((d.price * 1.5) / 100) * 100 - 1;
-    const discount = Math.max(0, Math.round((1 - d.price / mrp) * 100));
+    const compareAt = Number(d.sale_price ?? d.mrp ?? (d._cloudProductId ? 0 : Math.round((d.price * 1.5) / 100) * 100 - 1));
+    const showCompareAt = compareAt > 0 && compareAt !== Number(d.price);
+    const discount = compareAt > d.price ? Math.max(0, Math.round((1 - d.price / compareAt) * 100)) : 0;
     const isFav = wishlist.has(d.id);
     const swatches = d.swatches && d.swatches.length ? d.swatches : [{ name: d.wash, color: '#1B2A4A', image: d.image }];
     const visibleSwatches = swatches.slice(0, 3);
@@ -599,7 +601,7 @@
             </div>
             <div class="drop-pricing-row">
               <span class="drop-price">${money(d.price)}</span>
-              <span class="drop-mrp mono">${money(mrp)}</span>
+              ${showCompareAt ? `<span class="drop-mrp mono">${money(compareAt)}</span>` : ''}
               ${discount > 0 ? `<span class="drop-discount mono">${discount}% OFF</span>` : ''}
             </div>
           </div>
@@ -1107,8 +1109,8 @@
     if (filterState.pattern.size && !filterState.pattern.has(d.pattern)) return false;
     if (filterState.color.size && !filterState.color.has(d.color)) return false;
     if (filterState.discount.size) {
-      const mrp = d.mrp || Math.round((d.price * 1.5) / 100) * 100 - 1;
-      const pct = Math.round((1 - d.price / mrp) * 100);
+      const mrp = Number(d.sale_price ?? d.mrp ?? (d._cloudProductId ? 0 : Math.round((d.price * 1.5) / 100) * 100 - 1));
+      const pct = mrp > 0 ? Math.round((1 - d.price / mrp) * 100) : 0;
       const match = Array.from(filterState.discount).some((band) => {
         if (band === '30% - 40%') return pct >= 30 && pct < 40;
         if (band === '40%+') return pct >= 40;
@@ -1136,7 +1138,8 @@
 
   let reflowTimer = null;
   function applyFilters({ animate = true } = {}) {
-    const filtered = sortDrops(DROPS.filter(productMatches));
+    const catalogProducts = inventoryInitialized ? DROPS : [];
+    const filtered = sortDrops(catalogProducts.filter(productMatches));
     renderRunway(filtered);
 
     const count = activeFilterCount();
@@ -1144,7 +1147,7 @@
     const resultCount = $('#filter-result-count');
     if (resultCount) resultCount.textContent = pad2(filtered.length);
     const totalCount = $('#filter-total');
-    if (totalCount) totalCount.textContent = pad2(DROPS.length);
+    if (totalCount) totalCount.textContent = pad2(catalogProducts.length);
     const badge = $('#filter-count');
     if (badge) {
       badge.textContent = count;
@@ -2015,6 +2018,9 @@
     setText('#pd-breadcrumb', `${product.fit.toUpperCase()} / ${product.rise.toUpperCase()} RISE / ${product.wash}`);
     setText('#pd-name', product.name);
     setText('#pd-price', money(product.price));
+    const compareAt = Number(product.sale_price ?? product.mrp ?? (product._cloudProductId ? 0 : Math.round((product.price * 1.5) / 100) * 100 - 1));
+    const compareEl = $('#pd-mrp');
+    if (compareEl) { compareEl.textContent = compareAt > 0 && compareAt !== Number(product.price) ? money(compareAt) : ''; compareEl.hidden = !(compareAt > 0 && compareAt !== Number(product.price)); }
     setText('#pd-sticky-name', product.name);
     setText('#pd-sticky-price', money(product.price));
     setText('#pd-wash', product.wash);
@@ -2122,7 +2128,13 @@
   }
 
   function applyLiveInventory(rows) {
-    const activeRows = rows.filter((row) => row.is_active !== false && row.is_active !== 0 && row.active !== false && row.active !== 0 && !['inactive', 'draft', 'archived'].includes(String(row.status || '').toLowerCase()));
+    inventoryInitialized = true;
+    const activeRows = rows.filter((row) => row.is_active === true);
+    const normalizeId = (value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    rows.filter((row) => row.is_active !== true).forEach((row) => {
+      const match = DROPS.find((item) => normalizeId(item.id) === normalizeId(row.slug) || normalizeId(item.name) === normalizeId(row.name));
+      if (match && !match._cloudProductId) { const index = DROPS.indexOf(match); if (index >= 0) DROPS.splice(index, 1); CATALOG.delete(String(match.id)); }
+    });
     const mappedIds = new Set();
     activeRows.forEach((row) => {
       const rowId = String(row.id ?? row.product_id ?? row.slug ?? '');
@@ -2138,7 +2150,8 @@
         _cloudProductId: rowId,
         name: row.name || row.title || 'Untitled Denim',
         fit, price: Number(row.price) || 0,
-        mrp: Number(row.mrp) || Math.round((Number(row.price) || 0) * 1.5),
+        mrp: row.mrp == null ? null : Number(row.mrp),
+        sale_price: row.sale_price == null ? null : Number(row.sale_price),
         gsm: `${Number(row.gsm ?? row.fabric_weight_gsm) || 450} GSM`,
         wash: row.wash || row.wash_type || 'RAW INDIGO',
         color: row.color || row.wash || row.wash_type || 'Raw Indigo',
@@ -2156,7 +2169,7 @@
       mappedIds.add(rowId);
     });
     DROPS.slice().forEach((product) => {
-      if (!product._cloudProductId || mappedIds.has(product._cloudProductId)) return;
+      if (mappedIds.has(product._cloudProductId)) return;
       const index = DROPS.indexOf(product);
       if (index >= 0) DROPS.splice(index, 1);
       CATALOG.delete(String(product.id));
@@ -2738,7 +2751,8 @@
 
   /* ---------- Boot ---------- */
   function boot() {
-    renderRunway();
+    if (window.TJFInventory?.loaded) applyLiveInventory(window.TJFInventory.rows);
+    else renderRunway(inventoryInitialized ? DROPS : []);
     renderLookbook();
     renderCart();
     bindGlobalEvents();
@@ -2764,6 +2778,10 @@
       setTimeout(() => ScrollTrigger.refresh(), 400);
     }
   }
+
+  if (window.TJFInventory?.ready) window.TJFInventory.ready.then(() => {
+    if (!window.TJFInventory.loaded && !inventoryInitialized) { inventoryInitialized = true; applyFilters({ animate: false }); }
+  });
 
   window.addEventListener('tjf:inventory', (event) => applyLiveInventory(event.detail || []));
   if (window.TJFInventory?.rows?.length) applyLiveInventory(window.TJFInventory.rows);
