@@ -11,6 +11,7 @@
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const money = (n) => '₹' + Number(n).toLocaleString('en-IN');
+  const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const pad2 = (n) => String(n).padStart(2, '0');
   const unsplash = (id, w = 1100) =>
     `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
@@ -277,6 +278,32 @@
   }));
   CATALOG.set(CROSS_SELL.id, { ...CROSS_SELL, type: 'cross' });
 
+  function syncCloudCatalog(rows) {
+    rows.forEach((row) => {
+      if (row.is_active === false || row.is_active === 0 || row.active === false || row.active === 0 || ['inactive', 'draft', 'archived'].includes(String(row.status || '').toLowerCase())) return;
+      const id = String(row.id ?? row.product_id ?? row.slug ?? '');
+      if (!id) return;
+      const image = row.image_url || row.image || row.gallery_urls?.[0] || '';
+      const stock = Object.fromEntries(SIZES.map((size) => [size, Math.max(0, Number(row[`stock_${size}`]) || 0)]));
+      const rawFit = String(row.fit || row.fit_category || 'Wide');
+      const fit = ({ Wide: 'Wide-Leg', 'Wide Leg': 'Wide-Leg' })[rawFit] || rawFit;
+      const existing = CATALOG.get(id) || Array.from(CATALOG.values()).find((item) => item._cloudProductId === id);
+      const product = {
+        ...(existing || {}), id: existing?.id || id, _cloudProductId: id,
+        name: row.name || row.title || 'Untitled Denim', fit,
+        price: Number(row.price) || 0, gsm: `${Number(row.gsm ?? row.fabric_weight_gsm) || 450} GSM`,
+        wash: row.wash || row.wash_type || 'RAW INDIGO', rise: row.rise || 'High',
+        distress: row.distress || 'None', stretch: Number(row.stretch) || 0,
+        badge: row.badge || '', image, imageFlat: row.gallery_urls?.[0] || image,
+        soldOut: SIZES.filter((size) => stock[size] === 0), stock,
+        gallery: Array.isArray(row.gallery_urls) ? row.gallery_urls : image ? [image] : [],
+        description: row.description || '', type: 'drop',
+      };
+      CATALOG.set(String(product.id), product);
+      CATALOG.set(id, product);
+    });
+  }
+
   const SHIPPING_THRESHOLD = 2499;
   const CART_KEY = 'tjf-cart-v1';
   const RECENT_KEY = 'tjf-recent-v1';
@@ -284,6 +311,7 @@
 
   /* ---------- 3. State ---------- */
   let product = null;
+  let pageInitialized = false;
   let selectedSize = 32;
   let selectedLength = 32;
   let currentView = 'model';
@@ -474,7 +502,7 @@
     renderMeasurementTable(p);
 
     // Description
-    $('#pdp-description').textContent = fitObj ? fitObj.desc : 'Heavyweight Indian denim, cut for the street and built to outlive the trend.';
+    $('#pdp-description').textContent = p.description || (fitObj ? fitObj.desc : 'Heavyweight Indian denim, cut for the street and built to outlive the trend.');
 
     // Composition & Care
     $('#pdp-composition').textContent = '100% Cotton / 14oz Ring-Spun Selvedge Denim';
@@ -513,16 +541,16 @@
   function renderThumbnails(p) {
     const thumbs = $('#pdp-thumbs');
     if (!thumbs) return;
-    // Generate 4 thumbnails: model, flat, detail1, detail2
-    const thumbImages = [
-      { src: p.image, alt: `${p.name} on model`, view: 'model' },
-      { src: p.imageFlat, alt: `${p.name} flat-lay`, view: 'flat' },
-      { src: p.image.replace('w=900', 'w=400'), alt: `${p.name} detail`, view: 'model' },
-      { src: p.imageFlat.replace('w=900', 'w=400'), alt: `${p.name} detail 2`, view: 'flat' },
-    ];
+    const gallery = Array.isArray(p.gallery) && p.gallery.length ? p.gallery : (Array.isArray(p.gallery_urls) ? p.gallery_urls : []);
+    const sourceImages = Array.from(new Set([p.image, ...gallery, p.imageFlat].filter(Boolean)));
+    const thumbImages = Array.from({ length: 4 }, (_, index) => ({
+      src: sourceImages[index % sourceImages.length] || p.image,
+      alt: `${p.name} ${['on model', 'flat-lay', 'detail', 'detail'][index]}`,
+      view: index % 2 ? 'flat' : 'model',
+    }));
     thumbs.innerHTML = thumbImages.map((img, i) => `
-      <button class="pdp-thumb ${i === 0 ? 'is-active' : ''}" data-thumb-index="${i}" data-view="${img.view}" aria-label="${img.alt}">
-        <img src="${img.src}" alt="" loading="lazy" />
+      <button class="pdp-thumb ${i === 0 ? 'is-active' : ''}" data-thumb-index="${i}" data-view="${img.view}" aria-label="${escapeHTML(img.alt)}">
+        <img src="${escapeHTML(img.src)}" alt="" loading="lazy" />
       </button>
     `).join('');
   }
@@ -578,6 +606,10 @@
     if (warning) {
       warning.hidden = stock == null || stock === 0 || stock > 5;
       warning.textContent = warning.hidden ? '' : `ONLY ${stock} LEFT`;
+    }
+    if (product.stock) {
+      const soldOut = SIZES.every((size) => product.stock[size] === 0);
+      ['#pdp-add-bag', '#pdp-buy-now'].forEach((selector) => { const button = $(selector); if (button) button.disabled = soldOut; });
     }
   }
 
@@ -1230,26 +1262,44 @@
       window.location.href = 'index.html';
       return;
     }
-    const p = resolveProduct(id);
-    if (!p) {
-      window.location.href = 'index.html';
-      return;
-    }
+    if (window.TJFInventory?.rows?.length) syncCloudCatalog(window.TJFInventory.rows);
+    if (!mountProduct(id) && !window.TJFInventory?.rows?.length) {
+      const wait = document.createElement('p');
+      wait.className = 'pdp-cloud-loading mono';
+      wait.textContent = 'LOADING LIVE PRODUCT…';
+      $('#pdp-title').textContent = 'LOADING…';
+      $('#pdp-breadcrumb-product').textContent = 'Loading product';
+      $('#pdp-title').insertAdjacentElement('afterend', wait);
+      window.setTimeout(() => { if (!pageInitialized) window.location.href = 'index.html#drops'; }, 12000);
+    } else if (!pageInitialized) window.location.href = 'index.html#drops';
+  }
 
+  function mountProduct(id) {
+    if (pageInitialized) return true;
+    const p = resolveProduct(id);
+    if (!p) return false;
+    pageInitialized = true;
     renderProduct(p);
     if (window.TJFInventory?.rows?.length) applyLiveStock(window.TJFInventory.rows);
     bindEvents();
     initSmoothScroll();
     renderCart();
-
-    if (window.gsap && window.ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-      ScrollTrigger.refresh();
-    }
+    if (window.gsap && window.ScrollTrigger) { gsap.registerPlugin(ScrollTrigger); ScrollTrigger.refresh(); }
+    return true;
   }
 
-  window.addEventListener('tjf:inventory', (event) => applyLiveStock(event.detail || []));
-  if (window.TJFInventory?.rows?.length) applyLiveStock(window.TJFInventory.rows);
+  window.addEventListener('tjf:inventory', (event) => {
+    const rows = event.detail || [];
+    syncCloudCatalog(rows);
+    if (!pageInitialized) {
+      const id = getProductIdFromUrl();
+      if (!mountProduct(id)) window.location.href = 'index.html#drops';
+    } else applyLiveStock(rows);
+  });
+  if (window.TJFInventory?.rows?.length) {
+    syncCloudCatalog(window.TJFInventory.rows);
+    if (product) applyLiveStock(window.TJFInventory.rows);
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once: true });

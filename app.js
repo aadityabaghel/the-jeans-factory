@@ -18,6 +18,7 @@
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const money = (n) => '₹' + Number(n).toLocaleString('en-IN');
+  const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const pad2 = (n) => String(n).padStart(2, '0');
   const SIZES_STOCK = [28, 30, 32, 34, 36];
   const unsplash = (id, w = 1100) =>
@@ -552,6 +553,11 @@
   }
 
   function renderCardHTML(d) {
+    const name = escapeHTML(d.name);
+    const fit = escapeHTML(d.fit);
+    const wash = escapeHTML(d.wash || 'RAW INDIGO');
+    const productId = encodeURIComponent(String(d.id));
+    const image = escapeHTML(d.image || '');
     const mrp = d.mrp || Math.round((d.price * 1.5) / 100) * 100 - 1;
     const discount = Math.max(0, Math.round((1 - d.price / mrp) * 100));
     const isFav = wishlist.has(d.id);
@@ -563,33 +569,33 @@
     const lowStock = available.length && Math.min(...available) <= 5 ? Math.min(...available) : null;
 
     return `
-      <article class="drop-card collection-card" data-fit="${d.fit}" data-id="${d.id}" data-wash="${d.wash}" data-rise="${d.rise}" data-distress="${d.distress}" data-price="${d.price}">
+      <article class="drop-card collection-card" data-fit="${fit}" data-id="${escapeHTML(d.id)}" data-wash="${wash}" data-rise="${escapeHTML(d.rise)}" data-distress="${escapeHTML(d.distress)}" data-price="${Number(d.price) || 0}">
         <div class="drop-media studio-box">
-          <a class="drop-media-link" href="product.html?id=${d.id}" aria-label="View ${d.name} details">
-            <img class="drop-img drop-img-model" src="${d.image}" alt="${d.name} flat-lay in ${d.wash.toLowerCase()} denim" loading="lazy" decoding="async" />
+          <a class="drop-media-link" href="product.html?id=${productId}" aria-label="View ${name} details">
+            <img class="drop-img drop-img-model" src="${image}" alt="${name} flat-lay in ${wash.toLowerCase()} denim" loading="lazy" decoding="async" />
           </a>
           ${lowStock !== null ? `<span class="inventory-low-badge">ONLY ${lowStock} LEFT</span>` : ''}
         </div>
 
-        <div class="card-swatches" role="group" aria-label="Available washes for ${d.name}">
+        <div class="card-swatches" role="group" aria-label="Available washes for ${name}">
           ${visibleSwatches.map((sw, idx) => `
             <button type="button" class="swatch-dot ${idx === 0 ? 'is-active' : ''}"
-              data-swatch-img="${sw.image}" data-swatch-name="${sw.name}"
-              style="--sw-color: ${sw.color};" title="${sw.name}"
-              aria-label="Switch to ${sw.name}" aria-pressed="${idx === 0}"></button>
+              data-swatch-img="${escapeHTML(sw.image)}" data-swatch-name="${escapeHTML(sw.name)}"
+              style="--sw-color: ${/^#[\da-f]{6}$/i.test(sw.color) ? sw.color : '#1B2A4A'};" title="${escapeHTML(sw.name)}"
+              aria-label="Switch to ${escapeHTML(sw.name)}" aria-pressed="${idx === 0}"></button>
           `).join('')}
           ${extraCount > 0 ? `<span class="swatch-extra mono">+${extraCount}</span>` : ''}
           <div class="card-actions-inline">
-            <button type="button" class="quick-inspect-btn" data-quick-inspect="${d.id}" aria-label="Quick inspect ${d.name}">⤢</button>
-            <button type="button" class="wishlist-btn ${isFav ? 'is-saved' : ''}" data-wishlist-id="${d.id}" aria-pressed="${isFav}" aria-label="${isFav ? 'Remove from wishlist' : 'Save to wishlist'}">${isFav ? '♥' : '♡'}</button>
+            <button type="button" class="quick-inspect-btn" data-quick-inspect="${escapeHTML(d.id)}" aria-label="Quick inspect ${name}">⤢</button>
+            <button type="button" class="wishlist-btn ${isFav ? 'is-saved' : ''}" data-wishlist-id="${escapeHTML(d.id)}" aria-pressed="${isFav}" aria-label="${isFav ? 'Remove from wishlist' : 'Save to wishlist'}">${isFav ? '♥' : '♡'}</button>
           </div>
         </div>
 
-        <a class="drop-info-link" href="product.html?id=${d.id}">
+        <a class="drop-info-link" href="product.html?id=${productId}">
           <div class="drop-info">
             <div class="drop-title-wrap">
-              <h3>${d.name}</h3>
-              <span class="drop-fit-tag mono">${d.fit} · ${d.wash} · ${d.gsm}</span>
+              <h3>${name}</h3>
+              <span class="drop-fit-tag mono">${fit} · ${wash} · ${escapeHTML(d.gsm)}</span>
             </div>
             <div class="drop-pricing-row">
               <span class="drop-price">${money(d.price)}</span>
@@ -2015,7 +2021,7 @@
     setText('#pd-rise', `${product.rise.toUpperCase()} RISE`);
     setText('#pd-distress', `${product.distress.toUpperCase()} DISTRESS`);
     setText('#pd-gsm', product.gsm);
-    setText('#pd-desc', fitObj ? fitObj.desc : 'Heavyweight Indian denim, cut for the street and built to outlive the trend.');
+    setText('#pd-desc', product.description || (fitObj ? fitObj.desc : 'Heavyweight Indian denim, cut for the street and built to outlive the trend.'));
 
     setImg('#pd-image', product.image, `${product.name} on model`);
     setImg('#pd-image-flat', product.imageFlat || product.image, `${product.name} flat-lay`);
@@ -2106,11 +2112,55 @@
       warning.hidden = selectedStock == null || selectedStock > 5 || selectedStock === 0;
       warning.textContent = warning.hidden ? '' : `ONLY ${selectedStock} LEFT`;
     }
+    if (product.stock) {
+      const soldOut = SIZES_STOCK.every((size) => product.stock[size] === 0);
+      const addButton = $('#pd-add');
+      if (addButton) addButton.disabled = soldOut;
+    }
     const sizeReadout = $('#pd-size-readout');
     if (sizeReadout) sizeReadout.textContent = `SIZE W${productState.size}`;
   }
 
   function applyLiveInventory(rows) {
+    const activeRows = rows.filter((row) => row.is_active !== false && row.is_active !== 0 && row.active !== false && row.active !== 0 && !['inactive', 'draft', 'archived'].includes(String(row.status || '').toLowerCase()));
+    const mappedIds = new Set();
+    activeRows.forEach((row) => {
+      const rowId = String(row.id ?? row.product_id ?? row.slug ?? '');
+      if (!rowId) return;
+      const normalize = (value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      let product = DROPS.find((item) => item._cloudProductId === rowId || normalize(item.id) === normalize(row.slug) || normalize(item.name) === normalize(row.name));
+      const fitRaw = String(row.fit || row.fit_category || 'Wide');
+      const fit = ({ Wide: 'Wide-Leg', 'Wide Leg': 'Wide-Leg' })[fitRaw] || fitRaw;
+      const image = row.image_url || row.image || row.gallery_urls?.[0] || '';
+      const stock = Object.fromEntries(SIZES_STOCK.map((size) => [size, Math.max(0, Number(row[`stock_${size}`]) || 0)]));
+      const liveProduct = {
+        id: product?.id || rowId,
+        _cloudProductId: rowId,
+        name: row.name || row.title || 'Untitled Denim',
+        fit, price: Number(row.price) || 0,
+        mrp: Number(row.mrp) || Math.round((Number(row.price) || 0) * 1.5),
+        gsm: `${Number(row.gsm ?? row.fabric_weight_gsm) || 450} GSM`,
+        wash: row.wash || row.wash_type || 'RAW INDIGO',
+        color: row.color || row.wash || row.wash_type || 'Raw Indigo',
+        pattern: row.pattern || 'Solid Raw', rise: row.rise || 'High',
+        distress: row.distress || 'None', stretch: Number(row.stretch) || 0,
+        badge: row.badge || '', image, imageFlat: image,
+        stock, soldOut: SIZES_STOCK.filter((size) => stock[size] === 0),
+        sizes: SIZES_STOCK.filter((size) => stock[size] > 0),
+        newest: Number(row.created_at ? Date.parse(row.created_at) : Date.now()),
+        swatches: [{ name: row.wash || row.wash_type || 'Raw Indigo', color: row.swatch_color || '#1B2A4A', image }],
+      };
+      if (product) Object.assign(product, liveProduct);
+      else { product = liveProduct; DROPS.push(product); }
+      CATALOG.set(String(product.id), product);
+      mappedIds.add(rowId);
+    });
+    DROPS.slice().forEach((product) => {
+      if (!product._cloudProductId || mappedIds.has(product._cloudProductId)) return;
+      const index = DROPS.indexOf(product);
+      if (index >= 0) DROPS.splice(index, 1);
+      CATALOG.delete(String(product.id));
+    });
     CATALOG.forEach((product) => {
       const row = rows.find((item) => [item.id, item.slug, item.handle, item.product_id, item.name, item.title]
         .some((value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '') === String(product.id).toLowerCase().replace(/[^a-z0-9]/g, '') || (value && String(value).toLowerCase() === String(product.name).toLowerCase())));
@@ -2118,7 +2168,7 @@
       product.stock = Object.fromEntries(SIZES_STOCK.map((size) => [size, Math.max(0, Number(row[`stock_${size}`]) || 0)]));
       product.soldOut = SIZES_STOCK.filter((size) => product.stock[size] === 0);
     });
-    renderRunway(runwayItems);
+    applyFilters({ animate: false });
     if (productState.product) {
       if (productState.product.stock?.[productState.size] === 0) productState.size = SIZES_STOCK.find((size) => productState.product.stock[size] > 0) || SIZES_STOCK[0];
       renderProductSizes(productState.product);

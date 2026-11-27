@@ -4,28 +4,85 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#141414" />
-  <title>Admin Console — THE JEANS FACTORY</title>
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <title>Control Room — THE JEANS FACTORY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=11" />
 </head>
 <body class="cloud-page admin-page">
-  <header class="cloud-header"><a href="index.html" class="wordmark"><span class="wordmark-main">THE JEANS</span><span class="wordmark-sub mono">FACTORY®</span></a><span class="mono">INTERNAL / ADMIN</span></header>
-  <main class="cloud-main admin-main">
-    <p class="mono cloud-kicker">OPERATIONS / AUTHENTICATED ACCESS</p>
-    <h1>CONTROL<br /><span>ROOM.</span></h1>
-    <form id="admin-login" class="cloud-form">
-      <label class="mono" for="admin-email">ADMIN EMAIL</label><input id="admin-email" type="email" autocomplete="username" required />
-      <label class="mono" for="admin-password">PASSWORD</label><input id="admin-password" type="password" autocomplete="current-password" required />
-      <button class="btn-solid" type="submit">SIGN IN</button><p id="admin-message" class="cloud-message" role="status"></p>
-    </form>
+  <header class="cloud-header admin-header">
+    <a href="index.html" class="wordmark"><span class="wordmark-main">THE JEANS</span><span class="wordmark-sub mono">FACTORY®</span></a>
+    <div class="admin-header-right"><span class="admin-live-dot"></span><span class="mono">CONTROL ROOM / SS26</span><button class="btn-outline" id="admin-signout" type="button" hidden>SIGN OUT</button></div>
+  </header>
+  <main class="admin-shell">
+    <section class="admin-login-screen" id="admin-login-screen">
+      <p class="mono cloud-kicker">OPERATIONS / AUTHENTICATED ACCESS</p>
+      <h1>CONTROL<br /><span>ROOM.</span></h1>
+      <p class="admin-login-copy">Sign in with your store administrator account to manage orders, stock, and live product drops.</p>
+      <form id="admin-login" class="cloud-form">
+        <label class="mono" for="admin-email">ADMIN EMAIL</label><input id="admin-email" type="email" autocomplete="username" required />
+        <label class="mono" for="admin-password">PASSWORD</label><input id="admin-password" type="password" autocomplete="current-password" required />
+        <button class="btn-solid" type="submit">ENTER CONTROL ROOM</button><p id="admin-message" class="cloud-message" role="status"></p>
+      </form>
+    </section>
+
     <section id="admin-console" hidden>
-      <div class="admin-toolbar"><p class="mono">LIVE ORDERS &amp; INVENTORY</p><button class="btn-outline" id="admin-signout" type="button">SIGN OUT</button></div>
-      <div id="admin-orders" class="admin-panel"></div>
-      <div class="admin-panel"><h2>PRODUCT SIZE STOCK</h2><div id="admin-products"></div></div>
+      <div class="admin-title-row"><div><p class="mono cloud-kicker">THE JEANS FACTORY / OPERATIONS</p><h1>CONTROL <span>ROOM</span></h1></div><div class="admin-clock mono"><span class="admin-live-dot"></span>LIVE SYSTEM</div></div>
+      <div class="admin-kpis" aria-label="Store KPIs">
+        <article class="admin-kpi"><span class="mono">TOTAL REVENUE (₹)</span><strong id="kpi-revenue">—</strong><small class="mono">NON-CANCELLED ORDERS</small></article>
+        <article class="admin-kpi"><span class="mono">ACTIVE ORDERS</span><strong id="kpi-orders">—</strong><small class="mono">CONFIRMED / PACKED / SHIPPED</small></article>
+        <article class="admin-kpi admin-kpi-alert"><span class="mono">LOW STOCK ALERTS</span><strong id="kpi-stock">—</strong><small class="mono">SIZES AT 5 OR LESS</small></article>
+        <article class="admin-kpi"><span class="mono">LIVE CATALOG</span><strong id="kpi-catalog">—</strong><small class="mono">ACTIVE PRODUCTS</small></article>
+      </div>
+      <div class="admin-workspace">
+        <nav class="admin-tabs" role="tablist" aria-label="Control room workspace">
+          <button class="admin-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="tab-orders" data-tab="orders"><span>01</span> ORDERS <b id="orders-tab-count">00</b></button>
+          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="tab-catalog" data-tab="catalog"><span>02</span> CATALOG</button>
+          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="tab-coupons" data-tab="coupons"><span>03</span> COUPONS</button>
+        </nav>
+        <section id="tab-orders" class="admin-tab-panel" role="tabpanel" data-panel="orders">
+          <div class="admin-panel-heading"><div><p class="mono">FULFILMENT / CUSTOMER CARE</p><h2>ORDERS</h2></div><div class="admin-order-search"><input id="order-search" type="search" placeholder="SEARCH CODE / NAME / PHONE" aria-label="Search orders" /><span>⌕</span></div></div>
+          <div class="admin-filter-pills" id="order-filters" role="group" aria-label="Filter orders">
+            <button type="button" class="is-active" data-order-filter="ALL">ALL</button><button type="button" data-order-filter="CONFIRMED">CONFIRMED</button><button type="button" data-order-filter="PACKED">PACKED</button><button type="button" data-order-filter="SHIPPED">SHIPPED</button><button type="button" data-order-filter="DELIVERED">DELIVERED</button>
+          </div>
+          <div id="admin-orders" class="admin-orders-list"><p class="mono admin-loading">CONNECTING TO ORDERS…</p></div>
+        </section>
+        <section id="tab-catalog" class="admin-tab-panel" role="tabpanel" data-panel="catalog" hidden>
+          <div class="admin-panel-heading"><div><p class="mono">PRODUCT ENGINEERING / LIVE INVENTORY</p><h2>CATALOG</h2></div><button class="admin-add-product" id="open-product-drawer" type="button">＋ ADD NEW PRODUCT</button></div>
+          <div id="admin-products" class="admin-product-grid"><p class="mono admin-loading">LOADING LIVE CATALOG…</p></div>
+        </section>
+        <section id="tab-coupons" class="admin-tab-panel" role="tabpanel" data-panel="coupons" hidden>
+          <div class="admin-panel-heading"><div><p class="mono">PROMOTION / CONVERSION</p><h2>COUPONS</h2></div></div>
+          <form id="coupon-create-form" class="admin-coupon-create"><label class="mono">NEW CODE<input name="code" required placeholder="MILLDROP10" /></label><label class="mono">DISCOUNT ₹<input name="discount_amount" type="number" min="1" required placeholder="300" /></label><label class="mono">MIN ORDER ₹<input name="min_order_amount" type="number" min="0" value="0" /></label><button type="submit" class="btn-solid">CREATE COUPON</button></form>
+          <div id="admin-coupons" class="admin-coupon-list"><p class="mono admin-loading">LOADING PROMO CODES…</p></div>
+        </section>
+      </div>
     </section>
   </main>
-  <footer class="cloud-footer mono"><a href="track.html">TRACK ORDER</a><span>THE JEANS FACTORY</span></footer>
+
+  <div class="admin-drawer-backdrop" id="product-drawer-backdrop" hidden></div>
+  <aside class="admin-product-drawer" id="product-drawer" aria-hidden="true" aria-labelledby="product-drawer-title">
+    <div class="admin-drawer-head"><div><p class="mono">CATALOG / NEW DROP</p><h2 id="product-drawer-title">ADD PRODUCT</h2></div><button type="button" id="close-product-drawer" class="admin-drawer-close" aria-label="Close product drawer">×</button></div>
+    <form id="new-product-form" class="admin-product-form">
+      <div class="admin-upload-zone" id="product-upload-zone" tabindex="0"><input id="product-photos" type="file" accept="image/*" multiple hidden /><span class="admin-upload-icon">↥</span><strong>DROP PRODUCT PHOTOS HERE</strong><span class="mono">OR CLICK TO SELECT / MULTIPLE IMAGES</span><div id="product-photo-previews" class="admin-photo-previews"></div></div>
+      <label class="mono">EXTERNAL IMAGE URL <input name="image_url" type="url" placeholder="https://… (optional fallback)" /></label>
+      <label class="mono">PRODUCT NAME <input name="name" required placeholder="Raw Indigo Wide-Leg" /></label>
+      <div class="admin-form-two"><label class="mono">FIT CATEGORY<select name="fit" required><option>Baggy</option><option>Wide</option><option>Straight</option><option>Slim</option><option>Carpenter</option><option>Bootcut</option><option>Custom</option></select></label><label class="mono admin-custom-fit" hidden>CUSTOM FIT<input name="custom_fit" placeholder="Enter fit category" /></label><label class="mono">PRICE ₹<input name="price" type="number" min="1" step="1" required placeholder="2499" /></label></div>
+      <div class="admin-form-two"><label class="mono">FABRIC WEIGHT (GSM)<input name="gsm" type="number" min="1" value="450" required /></label><label class="mono">WASH TYPE<input name="wash" required placeholder="Raw Indigo" /></label></div>
+      <label class="mono">DROP BADGE <input name="badge" placeholder="DROP 02 / LIMITED" /></label>
+      <label class="mono">DESCRIPTION <textarea name="description" rows="3" placeholder="Fabric, fit, and finish details…"></textarea></label>
+      <div class="admin-initial-stock"><p class="mono">INITIAL SIZE STOCK</p><div class="admin-stock-inputs">${[28,30,32,34,36].map((size) => `<label class="mono">W${size}<input name="stock_${size}" type="number" min="0" step="1" value="0" /></label>`).join('')}</div></div>
+      <p class="admin-drawer-message" id="product-form-message" role="status"></p>
+      <button class="admin-add-product admin-publish" type="submit">PUBLISH PRODUCT ↗</button>
+    </form>
+  </aside>
+
+  <dialog id="order-detail-dialog" class="admin-order-dialog"><div id="order-detail-content"></div><button type="button" class="admin-dialog-close" id="close-order-dialog">CLOSE ×</button></dialog>
+  <div id="admin-toast" class="admin-toast" role="status" aria-live="polite"></div>
+  <footer class="cloud-footer mono"><a href="track.html">TRACK ORDER</a><span>THE JEANS FACTORY / INTERNAL</span></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="supabase-client.js" defer></script>
-  <script src="admin.js" defer></script>
+  <script src="supabase-client.js?v=11" defer></script>
+  <script src="admin.js?v=11" defer></script>
 </body>
 </html>

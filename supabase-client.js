@@ -36,11 +36,12 @@
     },
     async subscribe() {
       if (!window.sb) return;
-      try { await this.refresh(); } catch (error) { console.warn('Live inventory unavailable:', error.message); }
       window.sb.channel('tjf-products-stock')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
           this.refresh().catch((error) => console.warn('Inventory refresh failed:', error.message));
-        }).subscribe();
+        }).subscribe((status) => {
+          if (status === 'SUBSCRIBED') this.refresh().catch((error) => console.warn('Live inventory unavailable:', error.message));
+        });
     },
   };
   window.TJFInventory.subscribe();
