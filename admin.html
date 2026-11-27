@@ -72,7 +72,16 @@
       <div class="admin-form-two"><label class="mono">FABRIC WEIGHT (GSM)<input name="gsm" type="number" min="1" value="450" required /></label><label class="mono">WASH TYPE<input name="wash" required placeholder="Raw Indigo" /></label></div>
       <label class="mono">DROP BADGE <input name="badge" placeholder="DROP 02 / LIMITED" /></label>
       <label class="mono">DESCRIPTION <textarea name="description" rows="3" placeholder="Fabric, fit, and finish details…"></textarea></label>
-      <div class="admin-initial-stock"><p class="mono">INITIAL SIZE STOCK</p><div class="admin-stock-inputs">${[28,30,32,34,36].map((size) => `<label class="mono">W${size}<input name="stock_${size}" type="number" min="0" step="1" value="0" /></label>`).join('')}</div></div>
+      <div class="admin-initial-stock">
+        <p class="mono">INITIAL SIZE STOCK</p>
+        <div class="admin-stock-inputs">
+          <label class="mono">W28<input name="stock_28" type="number" min="0" step="1" value="10" /></label>
+          <label class="mono">W30<input name="stock_30" type="number" min="0" step="1" value="10" /></label>
+          <label class="mono">W32<input name="stock_32" type="number" min="0" step="1" value="10" /></label>
+          <label class="mono">W34<input name="stock_34" type="number" min="0" step="1" value="10" /></label>
+          <label class="mono">W36<input name="stock_36" type="number" min="0" step="1" value="10" /></label>
+        </div>
+      </div>
       <p class="admin-drawer-message" id="product-form-message" role="status"></p>
       <button class="admin-add-product admin-publish" type="submit">PUBLISH PRODUCT ↗</button>
     </form>
